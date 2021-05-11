@@ -39,7 +39,7 @@ public class VoucherType {
     @Column(nullable = false)
     private Integer sortOrder=999;
 
-    private Boolean status;
+    private Boolean status=true;
 
     private Integer createdBy;
     private Integer updatedBy;

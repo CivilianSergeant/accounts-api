@@ -1,6 +1,9 @@
 package technology.grameen.gaccounting.services.voucher;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import technology.grameen.gaccounting.accounting.entity.VoucherType;
 import technology.grameen.gaccounting.accounting.repositories.VoucherTypeRepository;
 import technology.grameen.gaccounting.projection.authserver.VoucherTypeList;
@@ -22,11 +25,13 @@ public class VoucherTypeServiceImpl implements VoucherTypeService{
     }
 
     @Override
+    public Page<VoucherTypeList> getVoucherTypeList(Pageable pageable) {
+        return voucherTypeRepository.findAllVoucherType(pageable);
+    }
+
+    @Override
+    @Transactional
     public VoucherType addVoucherType(VoucherType voucherType) {
-        VoucherType voucherType1 = voucherTypeRepository.save(voucherType);
-        voucherType1.setAutoVoucherMaps(null);
-        voucherType1.setAccMaps(null);
-        voucherType1.setVouchers(null);
-        return voucherType1;
+        return voucherTypeRepository.save(voucherType);
     }
 }
