@@ -10,6 +10,14 @@ public class ChartAccountGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     private ChartAccount chartAccount;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setChartAccount(ChartAccount chartAccount) {
+        this.chartAccount = chartAccount;
+    }
 }
