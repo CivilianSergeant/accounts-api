@@ -13,6 +13,7 @@ import technology.grameen.gaccounting.responses.ExceptionResponse;
 import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.voucher.VoucherTypeService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
 import java.util.Optional;
 
@@ -82,5 +83,13 @@ public class VoucherTypeController {
                 voucherType1
 
         ), HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
+        return new ResponseEntity<>(new ExceptionResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                ex.getMessage()
+        ),HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

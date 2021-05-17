@@ -2,12 +2,16 @@ package technology.grameen.gaccounting.resources;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import technology.grameen.gaccounting.responses.EntityCollectionResponse;
+import technology.grameen.gaccounting.responses.ExceptionResponse;
 import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.chartaccount.CaTypeService;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/v1/ca-types")
@@ -25,5 +29,13 @@ public class CaTypeController {
                 HttpStatus.OK.value(),
                 caTypeService.chartAccountTypeList()
         ),HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
+        return new ResponseEntity<>(new ExceptionResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                ex.getMessage()
+        ),HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
