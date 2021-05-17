@@ -11,8 +11,9 @@ import java.util.List;
 @Repository
 public interface CaRepository extends JpaRepository<ChartAccount,Long> {
 
-    @Query(value = "SELECT cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, cas.is_ledger as isLedger FROM CA_TYPES cat \n" +
-            "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id\n" +
+    @Query(value = "SELECT cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
+            "cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
     List<ChartAccountList> findAllChartAccounts();
 }
