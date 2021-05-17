@@ -6,5 +6,5 @@ public interface ChartAccountList {
     String getCtCode();
     String getTitle();
     String getCaCode();
-    String getIsLedger();
+    Boolean getIsLedger();
 }
