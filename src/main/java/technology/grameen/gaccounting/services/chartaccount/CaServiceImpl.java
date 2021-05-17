@@ -5,6 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.accounting.repositories.CaRepository;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
+
+import java.util.List;
 
 @Service
 public class CaServiceImpl implements CaService{
@@ -20,6 +23,11 @@ public class CaServiceImpl implements CaService{
         this.caRepository = caRepository;
         this.caLedgerService = caLedgerService;
         this.caGroupService = caGroupService;
+    }
+
+    @Override
+    public List<ChartAccountList> getChartAccounts() {
+        return caRepository.findAllChartAccounts();
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.responses.EntityCollectionResponse;
 import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.ExceptionResponse;
 import technology.grameen.gaccounting.responses.IResponse;
@@ -21,6 +22,15 @@ public class CaController {
 
     CaController(CaService caService){
         this.caService = caService;
+    }
+
+
+    @GetMapping("")
+    public ResponseEntity<IResponse> getChartAccounts(){
+        return new ResponseEntity<>(new EntityCollectionResponse<>(
+                HttpStatus.OK.value(),
+                caService.getChartAccounts()
+        ), HttpStatus.OK);
     }
 
     @PostMapping("/add")
