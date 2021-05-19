@@ -83,11 +83,11 @@ public class HealthCenterController {
     @PostMapping(value = "/add")
     public ResponseEntity<IResponse> addCenter(@RequestBody HealthCenter req){
         if(req.getName().isEmpty()){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Center/Office Name Required"),HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if(req.getCenterCode().isEmpty()){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Center/Office Code Required"),HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -98,22 +98,22 @@ public class HealthCenterController {
     @PutMapping(value = "/add")
     public ResponseEntity<IResponse> updateCenter(@RequestBody HealthCenter req){
         if(req.getId()==null){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Center/Office id required to update"),HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if(req.getName().isEmpty()){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Center/Office Name Required"),HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if(req.getCenterCode().isEmpty()){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Center/Office Code Required"),HttpStatus.UNPROCESSABLE_ENTITY);
         }
         HealthCenter center = null;
         try {
             center = healthCenterService.updateCenter(req);
         }catch (RuntimeException ex){
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.getMessage()),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
         return new ResponseEntity<>(new EntityResponse<>(HttpStatus.OK.value(),center), HttpStatus.OK);

@@ -1,6 +1,8 @@
 package technology.grameen.gaccounting.accounting.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -11,10 +13,16 @@ public class ChartAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Title should not be blank")
     private String title;
+
+    @NotBlank(message = "Code should not be blank")
     private String code;
     private String description;
     private Integer sortOrder;
+
+    @NotNull(message = "ledger status value missing")
     private Boolean isLedger;
     private Boolean status;
     private Short caLevel;

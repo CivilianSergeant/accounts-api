@@ -62,7 +62,7 @@ public class VoucherTypeController {
                 : PageRequest.of(page.orElse(0),size.orElse(PAGE_SIZE));
 
         } catch (Exception ex) {
-            return new ResponseEntity<>(new ExceptionResponse(422,ex.getMessage()),HttpStatus.UNPROCESSABLE_ENTITY);
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,ex.getMessage()),HttpStatus.UNPROCESSABLE_ENTITY);
         }
         
         return new ResponseEntity<>(new EntityResponse<>(
@@ -85,11 +85,11 @@ public class VoucherTypeController {
         ), HttpStatus.OK);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
-        return new ResponseEntity<>(new ExceptionResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                ex.getMessage()
-        ),HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
+//        return new ResponseEntity<>(new ExceptionResponse(
+//                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+//                ex.getMessage()
+//        ),HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
 }

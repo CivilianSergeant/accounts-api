@@ -8,6 +8,7 @@ import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CaServiceImpl implements CaService{
@@ -31,13 +32,31 @@ public class CaServiceImpl implements CaService{
     }
 
     @Override
+    public List<ChartAccountList> getLedgerAccounts() {
+        return caRepository.findAllLedgerAccounts();
+    }
+
+    @Override
+    public List<ChartAccountList> getGroupAccounts() {
+        return caRepository.findAllGroupAccounts();
+    }
+
+    @Override
     @Transactional
     public ChartAccount addChartAccount(ChartAccount chartAccount) throws CustomException {
+
+        Optional<ChartAccount> ca = caRepository.findByCode(chartAccount.getCode());
+        if(ca!=null){
+            throw new CustomException("Code already exist");
+        }
 
         if(chartAccount.getChartAccountType()==null ||
             chartAccount.getChartAccountType().getId() == null){
             throw new CustomException("Chart Account Type Required");
         }
+
+
+
         ChartAccount account = null;
 
             account = caRepository.save(chartAccount);

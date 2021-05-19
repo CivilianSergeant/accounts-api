@@ -12,6 +12,8 @@ import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.chartaccount.CaService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -33,19 +35,35 @@ public class CaController {
         ), HttpStatus.OK);
     }
 
+    @GetMapping("/ledgers")
+    public ResponseEntity<IResponse> getLedgerAccounts(){
+        return new ResponseEntity<>(new EntityCollectionResponse<>(
+                HttpStatus.OK.value(),
+                caService.getLedgerAccounts()
+        ), HttpStatus.OK);
+    }
+
+    @GetMapping("/groups")
+    public ResponseEntity<IResponse> getGroupAccounts(){
+        return new ResponseEntity<>(new EntityCollectionResponse<>(
+                HttpStatus.OK.value(),
+                caService.getGroupAccounts()
+        ), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<IResponse> addCa(@RequestBody ChartAccount chartAccount){
+    public ResponseEntity<IResponse> addCa(@Valid @RequestBody ChartAccount chartAccount) throws Exception {
 
 
         ChartAccount chartAccount1 = null;
-        try {
+//        try {
             chartAccount1 = caService.addChartAccount(chartAccount);
-        } catch (CustomException e) {
-            return new ResponseEntity<>(new ExceptionResponse(
-                    HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                    e.getMessage()
-            ),HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+//        } catch (CustomException e) {
+//            return new ResponseEntity<>(new ExceptionResponse(
+//                    HttpStatus.UNPROCESSABLE_ENTITY,
+//                    e.getMessage()
+//            ),HttpStatus.UNPROCESSABLE_ENTITY);
+//        }
         chartAccount1.setChartAccountGroups(null);
         chartAccount1.setChildren(null);
         chartAccount1.setDrHeadMaps(null);
@@ -67,13 +85,14 @@ public class CaController {
 
     }
 
-    @ExceptionHandler
-    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
-        return new ResponseEntity<>(new ExceptionResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                ex.getMessage()
-        ),HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
+//
+//        return new ResponseEntity<>(new ExceptionResponse(
+//                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+//                ex.getMessage()
+//        ),HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
 
 
 }

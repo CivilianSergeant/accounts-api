@@ -53,7 +53,7 @@ public class VoucherController {
                     : PageRequest.of(page.orElse(0),size.orElse(PAGE_SIZE));
 
         } catch (Exception ex) {
-            return new ResponseEntity<>(new ExceptionResponse(422,ex.getMessage()),
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,ex.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -64,8 +64,8 @@ public class VoucherController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<IResponse> addVoucher(@RequestBody Voucher voucher){
-        try {
+    public ResponseEntity<IResponse> addVoucher(@RequestBody Voucher voucher) throws Exception{
+//        try {
 
             Voucher voucher1 = voucherService.addVoucher(voucher);
             voucher1.getTransactions().stream().map(t->{
@@ -74,20 +74,20 @@ public class VoucherController {
             }).collect(Collectors.toSet());
 
             return new ResponseEntity<>(new EntityResponse<>(HttpStatus.OK.value(),voucher1),HttpStatus.OK);
-        } catch (CustomException e) {
-            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                    e.getMessage()),HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+//        } catch (CustomException e) {
+//            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(),
+//                    e.getMessage()),HttpStatus.UNPROCESSABLE_ENTITY);
+//        }
     }
 
 
-    @ExceptionHandler
-    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
-        return new ResponseEntity<>(new ExceptionResponse(
-                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                ex.getMessage()
-        ),HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+//    @ExceptionHandler
+//    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
+//        return new ResponseEntity<>(new ExceptionResponse(
+//                HttpStatus.UNPROCESSABLE_ENTITY.value(),
+//                ex.getMessage()
+//        ),HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
 
 
 }

@@ -4,6 +4,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -15,12 +16,15 @@ public class VoucherType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Name should not be blank")
     @Column(length = 100,nullable = false)
     private String name;
 
+    @NotBlank(message = "Name should not be blank")
     @Column(length = 100,nullable = false)
     private String alias;
 
+    @NotBlank(message = "Name should not be blank")
     @Column(length = 100)
     private String voucherTypeCode;
 
