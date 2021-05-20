@@ -13,8 +13,9 @@ import java.util.Optional;
 public interface CaRepository extends JpaRepository<ChartAccount,Long> {
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
+            "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
     List<ChartAccountList> findAllChartAccounts();
 

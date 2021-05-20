@@ -46,7 +46,7 @@ public class CaServiceImpl implements CaService{
     public ChartAccount addChartAccount(ChartAccount chartAccount) throws CustomException {
 
         Optional<ChartAccount> ca = caRepository.findByCode(chartAccount.getCode());
-        if(ca!=null){
+        if(ca!=null && ca.isPresent()){
             throw new CustomException("Code already exist");
         }
 
