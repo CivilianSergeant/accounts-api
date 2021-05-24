@@ -15,7 +15,7 @@ public interface VoucherTypeRepository extends JpaRepository<VoucherType,Integer
 
     List<VoucherTypeList> findAllByStatus(Boolean status);
 
-    @Query(value = "SELECT v FROM VoucherType v")
+    @Query(value = "SELECT v FROM VoucherType v Order By v.numberPrefix ASC")
     Page<VoucherTypeList> findAllVoucherType(Pageable pageable);
 
 

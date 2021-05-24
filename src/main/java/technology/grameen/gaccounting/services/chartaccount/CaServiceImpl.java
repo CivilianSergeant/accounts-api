@@ -6,6 +6,7 @@ import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.accounting.repositories.CaRepository;
 import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
+import technology.grameen.gaccounting.projection.authserver.LedgerAccountList;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class CaServiceImpl implements CaService{
     }
 
     @Override
-    public List<ChartAccountList> getLedgerAccounts() {
+    public List<LedgerAccountList> getLedgerAccounts() {
         return caRepository.findAllLedgerAccounts();
     }
 
