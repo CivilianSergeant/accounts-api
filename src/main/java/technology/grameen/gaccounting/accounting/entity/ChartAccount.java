@@ -27,17 +27,17 @@ public class ChartAccount {
     private Boolean status;
     private Short caLevel;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ChartAccount parent;
 
     @OneToMany(mappedBy = "parent")
     private Set<ChartAccount> children;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false,name = "chart_account_type_id",referencedColumnName = "id")
     private ChartAccountType chartAccountType;
 
-    @OneToOne(mappedBy = "chartAccount")
+    @OneToOne(mappedBy = "chartAccount",fetch = FetchType.LAZY)
     private ChartAccountGroup chartAccountGroup;
 
     @OneToMany(mappedBy = "crHeader")
@@ -46,7 +46,7 @@ public class ChartAccount {
     @OneToMany(mappedBy = "drHeader")
     private Set<AutoVoucherMap> drHeadMaps;
 
-    @OneToOne(mappedBy = "chartAccount")
+    @OneToOne(mappedBy = "chartAccount",fetch = FetchType.LAZY)
     private ChartAccountLedger chartAccountLedger;
 
     private Integer createdBy;

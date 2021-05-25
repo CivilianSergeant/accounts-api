@@ -6,7 +6,9 @@ import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.accounting.repositories.CaRepository;
 import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
+import technology.grameen.gaccounting.projection.authserver.GroupDetail;
 import technology.grameen.gaccounting.projection.authserver.LedgerAccountList;
+import technology.grameen.gaccounting.projection.authserver.LedgerDetail;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +49,7 @@ public class CaServiceImpl implements CaService{
     public ChartAccount addChartAccount(ChartAccount chartAccount) throws CustomException {
 
         Optional<ChartAccount> ca = caRepository.findByCode(chartAccount.getCode());
-        if(ca!=null && ca.isPresent()){
+        if(ca!=null && ca.isPresent() && chartAccount.getId()==null){
             throw new CustomException("Code already exist");
         }
 
@@ -55,8 +57,6 @@ public class CaServiceImpl implements CaService{
             chartAccount.getChartAccountType().getId() == null){
             throw new CustomException("Chart Account Type Required");
         }
-
-
 
         ChartAccount account = null;
 
@@ -66,7 +66,7 @@ public class CaServiceImpl implements CaService{
                 chartAccount.getChartAccountLedger().setChartAccount(account);
                 caLedgerService.addCaLedger(chartAccount.getChartAccountLedger());
 
-            }else if(account.getId()>0 && !account.getLedger()){
+            }else if(account.getId()>0 && !account.getLedger() && chartAccount.getId()==null){
                 account.setChartAccountLedger(null);
 
                 caGroupService.addCaGroup(account);
@@ -75,4 +75,14 @@ public class CaServiceImpl implements CaService{
         return account;
     }
 
+
+    @Override
+    public Optional<GroupDetail> getGroupDetail(Long id) {
+        return caRepository.findGroupById(id);
+    }
+
+    @Override
+    public Optional<LedgerDetail> getLedgerDetail(Long id) {
+        return caRepository.findLedgerById(id);
+    }
 }

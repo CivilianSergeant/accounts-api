@@ -1,5 +1,6 @@
 package technology.grameen.gaccounting.resources;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,14 +57,9 @@ public class CaController {
 
 
         ChartAccount chartAccount1 = null;
-//        try {
-            chartAccount1 = caService.addChartAccount(chartAccount);
-//        } catch (CustomException e) {
-//            return new ResponseEntity<>(new ExceptionResponse(
-//                    HttpStatus.UNPROCESSABLE_ENTITY,
-//                    e.getMessage()
-//            ),HttpStatus.UNPROCESSABLE_ENTITY);
-//        }
+
+        chartAccount1 = caService.addChartAccount(chartAccount);
+
         chartAccount1.setChartAccountGroups(null);
         chartAccount1.setChildren(null);
         chartAccount1.setDrHeadMaps(null);
@@ -85,14 +81,23 @@ public class CaController {
 
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
-//
-//        return new ResponseEntity<>(new ExceptionResponse(
-//                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-//                ex.getMessage()
-//        ),HttpStatus.UNPROCESSABLE_ENTITY);
-//    }
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<IResponse> getGroupDetail(@PathVariable("id") Long id){
+
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                caService.getGroupDetail(id)
+        ), HttpStatus.OK);
+    }
+
+    @GetMapping("/ledger/detail/{id}")
+    public ResponseEntity<IResponse> getLedgerDetail(@PathVariable("id") Long id){
+
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                caService.getLedgerDetail(id)
+        ), HttpStatus.OK);
+    }
 
 
 }

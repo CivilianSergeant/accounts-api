@@ -2,10 +2,13 @@ package technology.grameen.gaccounting.accounting.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
+import technology.grameen.gaccounting.projection.authserver.GroupDetail;
 import technology.grameen.gaccounting.projection.authserver.LedgerAccountList;
+import technology.grameen.gaccounting.projection.authserver.LedgerDetail;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,5 +42,19 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     List<ChartAccountList> findAllGroupAccounts();
 
     Optional<ChartAccount> findByCode(String code);
+
+    @Query(value = "SELECT ca FROM ChartAccount ca " +
+            "LEFT JOIN FETCH ca.parent pa " +
+            "LEFT JOIN FETCH ca.chartAccountGroup cag " +
+            "LEFT JOIN FETCH ca.chartAccountLedger cal " +
+            "JOIN FETCH ca.chartAccountType cat WHERE ca.id=:id")
+    Optional<GroupDetail> findGroupById(@Param("id") Long id);
+
+    @Query(value = "SELECT ca FROM ChartAccount ca " +
+            "LEFT JOIN FETCH ca.parent pa " +
+            "LEFT JOIN FETCH ca.chartAccountGroup cag " +
+            "LEFT JOIN FETCH ca.chartAccountLedger cal " +
+            "JOIN FETCH ca.chartAccountType cat WHERE ca.id=:id")
+    Optional<LedgerDetail> findLedgerById(@Param("id") Long id);
 
 }

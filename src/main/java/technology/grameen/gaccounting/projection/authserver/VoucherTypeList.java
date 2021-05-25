@@ -12,4 +12,5 @@ public interface VoucherTypeList {
     String getModuleName();
     Integer getSortOrder();
     Boolean getStatus();
+    Boolean getPredefined();
 }

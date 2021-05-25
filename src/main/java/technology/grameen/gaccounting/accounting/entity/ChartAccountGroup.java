@@ -10,7 +10,7 @@ public class ChartAccountGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private ChartAccount chartAccount;
 
     public void setId(Long id) {
