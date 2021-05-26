@@ -44,6 +44,7 @@ public class VoucherType {
     private Integer sortOrder=999;
 
     private Boolean status=true;
+    private Boolean predefined;
 
     private Integer createdBy;
     private Integer updatedBy;
@@ -197,5 +198,13 @@ public class VoucherType {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getPredefined() {
+        return predefined;
+    }
+
+    public void setPredefined(Boolean predefined) {
+        this.predefined = predefined;
     }
 }

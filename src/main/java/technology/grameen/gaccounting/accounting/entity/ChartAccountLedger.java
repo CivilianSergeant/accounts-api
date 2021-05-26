@@ -37,7 +37,7 @@ public class ChartAccountLedger {
 
     private BigDecimal openingBalance;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private ChartAccount chartAccount;
 
     public Long getId() {
