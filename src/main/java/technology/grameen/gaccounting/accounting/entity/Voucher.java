@@ -202,9 +202,7 @@ public class Voucher {
         this.updatedAt = updatedAt;
     }
 
-    public void clearTransactions(){
-        this.transactions = new HashSet<>();
-    }
+
 
 
 }

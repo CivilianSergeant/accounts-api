@@ -9,6 +9,7 @@ import technology.grameen.gaccounting.accounting.repositories.VoucherTypeReposit
 import technology.grameen.gaccounting.projection.authserver.VoucherTypeList;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoucherTypeServiceImpl implements VoucherTypeService{
@@ -33,5 +34,10 @@ public class VoucherTypeServiceImpl implements VoucherTypeService{
     @Transactional
     public VoucherType addVoucherType(VoucherType voucherType) {
         return voucherTypeRepository.save(voucherType);
+    }
+
+    @Override
+    public Optional<VoucherType> findByAlias(String alias) {
+        return voucherTypeRepository.findByAlias(alias);
     }
 }

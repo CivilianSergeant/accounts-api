@@ -14,6 +14,7 @@ import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.voucher.VoucherService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -64,12 +65,12 @@ public class VoucherController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<IResponse> addVoucher(@RequestBody Voucher voucher) throws Exception{
+    public ResponseEntity<IResponse> addVoucher(@Valid @RequestBody Voucher voucher) throws Exception{
 //        try {
 
             Voucher voucher1 = voucherService.addVoucher(voucher);
             voucher1.getTransactions().stream().map(t->{
-                t.getVoucher().clearTransactions();
+                t.setVoucher(null);
                 return t;
             }).collect(Collectors.toSet());
 

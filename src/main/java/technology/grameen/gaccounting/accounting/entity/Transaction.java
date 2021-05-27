@@ -1,5 +1,7 @@
 package technology.grameen.gaccounting.accounting.entity;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -30,6 +32,7 @@ public class Transaction {
 
     private Short officeTypeId;
 
+    @Value("${keycloak.realm")
     private String realm;
 
     public Long getId() {

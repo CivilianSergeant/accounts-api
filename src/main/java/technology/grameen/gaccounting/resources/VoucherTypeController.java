@@ -85,11 +85,11 @@ public class VoucherTypeController {
         ), HttpStatus.OK);
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<IResponse>  getExecption(Exception ex, HttpServletRequest req){
-//        return new ResponseEntity<>(new ExceptionResponse(
-//                HttpStatus.UNPROCESSABLE_ENTITY.value(),
-//                ex.getMessage()
-//        ),HttpStatus.UNPROCESSABLE_ENTITY);
-//    }
+    @GetMapping("/by-alias/{alias}")
+    public ResponseEntity<IResponse> getOneByAlias(@PathVariable("alias") String alias){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                voucherTypeService.findByAlias(alias)
+        ),HttpStatus.OK);
+    }
 }
