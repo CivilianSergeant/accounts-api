@@ -1,4 +1,4 @@
-package technology.grameen.gaccounting.projection.authserver;
+package technology.grameen.gaccounting.projection;
 
 import java.math.BigDecimal;
 

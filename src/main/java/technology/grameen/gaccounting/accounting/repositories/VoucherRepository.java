@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
-import technology.grameen.gaccounting.projection.authserver.VoucherList;
+import technology.grameen.gaccounting.projection.VoucherList;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher,Long> {

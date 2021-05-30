@@ -87,9 +87,15 @@ public class VoucherTypeController {
 
     @GetMapping("/by-alias/{alias}")
     public ResponseEntity<IResponse> getOneByAlias(@PathVariable("alias") String alias){
+        Optional<VoucherType> voucherType = voucherTypeService.findByAlias(alias);
+        VoucherType vType = null;
+        if(voucherType.isPresent()){
+            vType = voucherType.get();
+            vType.setVouchers(null);
+        }
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
-                voucherTypeService.findByAlias(alias)
+                vType
         ),HttpStatus.OK);
     }
 }

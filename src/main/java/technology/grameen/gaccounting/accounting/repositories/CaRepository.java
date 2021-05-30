@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
-import technology.grameen.gaccounting.projection.authserver.ChartAccountList;
-import technology.grameen.gaccounting.projection.authserver.GroupDetail;
-import technology.grameen.gaccounting.projection.authserver.LedgerAccountList;
-import technology.grameen.gaccounting.projection.authserver.LedgerDetail;
+import technology.grameen.gaccounting.projection.ChartAccountList;
+import technology.grameen.gaccounting.projection.GroupDetail;
+import technology.grameen.gaccounting.projection.LedgerAccountList;
+import technology.grameen.gaccounting.projection.LedgerDetail;
 
 import java.util.List;
 import java.util.Optional;

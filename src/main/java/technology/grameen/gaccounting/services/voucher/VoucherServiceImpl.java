@@ -8,7 +8,7 @@ import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.accounting.repositories.TransactionRepository;
 import technology.grameen.gaccounting.accounting.repositories.VoucherRepository;
 import technology.grameen.gaccounting.exceptions.CustomException;
-import technology.grameen.gaccounting.projection.authserver.VoucherList;
+import technology.grameen.gaccounting.projection.VoucherList;
 
 import java.util.stream.Collectors;
 

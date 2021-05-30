@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import technology.grameen.gaccounting.accounting.entity.VoucherType;
 import technology.grameen.gaccounting.accounting.repositories.VoucherTypeRepository;
-import technology.grameen.gaccounting.projection.authserver.VoucherTypeList;
+import technology.grameen.gaccounting.projection.VoucherTypeList;
 
 import java.util.List;
 import java.util.Optional;

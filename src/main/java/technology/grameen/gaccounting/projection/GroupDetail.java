@@ -1,4 +1,4 @@
-package technology.grameen.gaccounting.projection.authserver;
+package technology.grameen.gaccounting.projection;
 
 public interface GroupDetail {
 

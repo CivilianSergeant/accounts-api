@@ -99,5 +99,13 @@ public class CaController {
         ), HttpStatus.OK);
     }
 
+    @GetMapping("/ledger/balance/{id}")
+    public ResponseEntity<IResponse> getLedgerBalance(@PathVariable("id") Long id){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                caService.getLedgerBalance(id)
+        ), HttpStatus.OK);
+    }
+
 
 }
