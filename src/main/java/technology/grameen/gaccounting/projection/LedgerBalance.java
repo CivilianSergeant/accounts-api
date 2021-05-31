@@ -9,4 +9,5 @@ public interface LedgerBalance {
     BigDecimal getBalance();
     BigDecimal getDebit();
     BigDecimal getCredit();
+    BigDecimal getOpeningBalance();
 }

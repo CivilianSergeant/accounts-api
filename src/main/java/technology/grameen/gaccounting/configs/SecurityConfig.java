@@ -33,6 +33,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         super.configure(http);
         http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().anyRequest().authenticated();
+                .and().authorizeRequests().anyRequest().permitAll();
     }
 }
