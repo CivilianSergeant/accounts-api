@@ -66,12 +66,23 @@ public class ReportServiceIml implements ReportService {
                         primaryGroup.getSubGroups().add(subGroup);
                     }else{
 
-                        ledgerAccount = new LedgerAccount(t.getId(),t.getLedgerAcc(),
-                                t.getTransType(), t.getOpeningBalance(),t.getDebit(),t.getCredit());
-                        subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
-                        subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
-                        subGroup.getLedgerAccounts().add(ledgerAccount);
+                        if(!root.contains(t.getLedgerAcc())){
+                            root.add(t.getLedgerAcc());
+                            ledgerAccount = new LedgerAccount(t.getId(),t.getLedgerAcc(),
+                                    t.getTransType(), t.getOpeningBalance(),t.getDebit(),t.getCredit());
+                            subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
+                            subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
+                            subGroup.getLedgerAccounts().add(ledgerAccount);
+                        }else {
 
+                            ledgerAccount.setDebit(ledgerAccount.getDebit().add(t.getDebit()));
+                            ledgerAccount.setCredit(ledgerAccount.getCredit().add(t.getCredit()));
+//                            ledgerAccount = new LedgerAccount(t.getId(), t.getLedgerAcc(),
+//                                    t.getTransType(), t.getOpeningBalance(), t.getDebit(), t.getCredit());
+                            subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
+                            subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
+//                            subGroup.getLedgerAccounts().add(ledgerAccount);
+                        }
                     }
                 }
 

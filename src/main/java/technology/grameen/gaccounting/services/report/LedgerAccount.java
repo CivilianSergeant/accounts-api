@@ -27,9 +27,9 @@ public class LedgerAccount {
         return ledgerAcc;
     }
 
-    public String getTransType() {
-        return transType;
-    }
+//    public String getTransType() {
+//        return transType;
+//    }
 
     public BigDecimal getOpeningBalance() {
         return openingBalance;
@@ -41,5 +41,13 @@ public class LedgerAccount {
 
     public BigDecimal getCredit() {
         return credit;
+    }
+
+    public void setDebit(BigDecimal debit) {
+        this.debit = debit;
+    }
+
+    public void setCredit(BigDecimal credit) {
+        this.credit = credit;
     }
 }
