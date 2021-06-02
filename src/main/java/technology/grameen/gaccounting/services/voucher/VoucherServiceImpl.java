@@ -8,8 +8,10 @@ import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.accounting.repositories.TransactionRepository;
 import technology.grameen.gaccounting.accounting.repositories.VoucherRepository;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.projection.VoucherDetail;
 import technology.grameen.gaccounting.projection.VoucherList;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,5 +59,10 @@ public class VoucherServiceImpl implements  VoucherService{
 
         }
         return voucherSaved;
+    }
+
+    @Override
+    public Optional<VoucherDetail> getVoucherDetail(Long id) {
+        return voucherRepository.findVoucherById(id);
     }
 }

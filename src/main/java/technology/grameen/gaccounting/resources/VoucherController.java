@@ -79,6 +79,15 @@ public class VoucherController {
     }
 
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<IResponse> getVoucherDetail(@PathVariable("id") Long id){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                voucherService.getVoucherDetail(id)
+        ),HttpStatus.OK);
+    }
+
+
 
 
 }
