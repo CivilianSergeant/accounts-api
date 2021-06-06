@@ -10,7 +10,7 @@ public class PrimaryGroup {
     String title;
     BigDecimal debitAmount = BigDecimal.valueOf(0);
     BigDecimal creditAmount = BigDecimal.valueOf(0);
-    BigDecimal opengingBalance = BigDecimal.valueOf(0);
+    BigDecimal openingBalance = BigDecimal.valueOf(0);
 
     List<SubGroup> subGroups = new ArrayList<>();
 
@@ -49,11 +49,11 @@ public class PrimaryGroup {
         this.creditAmount = creditAmount;
     }
 
-    public BigDecimal getOpengingBalance() {
-        return opengingBalance;
+    public BigDecimal getOpeningBalance() {
+        return openingBalance;
     }
 
-    public void setOpengingBalance(BigDecimal opengingBalance) {
-        this.opengingBalance = opengingBalance;
+    public void setOpeningBalance(BigDecimal openingBalance) {
+        this.openingBalance = openingBalance;
     }
 }
