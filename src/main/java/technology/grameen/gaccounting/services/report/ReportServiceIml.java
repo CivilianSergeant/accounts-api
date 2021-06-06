@@ -136,8 +136,10 @@ public class ReportServiceIml implements ReportService {
     private void updateGroup(ReportData t, Boolean isNew){
         subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
         subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
+        subGroup.setOpeningBalance(subGroup.getOpeningBalance().add(t.getOpeningBalance()));
         primaryGroup.setDebitAmount(primaryGroup.getDebitAmount().add(t.getDebit()));
         primaryGroup.setCreditAmount(primaryGroup.getCreditAmount().add(t.getCredit()));
+        primaryGroup.setOpeningBalance(primaryGroup.getOpeningBalance().add(t.getOpeningBalance()));
         if(isNew) {
             subGroup.getLedgerAccounts().add(ledgerAccount);
         }

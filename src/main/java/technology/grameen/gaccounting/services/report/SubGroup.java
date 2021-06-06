@@ -9,6 +9,7 @@ public class SubGroup {
     String title;
     BigDecimal debit = BigDecimal.valueOf(0);
     BigDecimal credit = BigDecimal.valueOf(0);
+    BigDecimal openingBalance = BigDecimal.valueOf(0);
 
     List<LedgerAccount> ledgerAccounts = new ArrayList<>();
 
@@ -42,5 +43,17 @@ public class SubGroup {
 
     public void setCredit(BigDecimal credit) {
         this.credit = credit;
+    }
+
+    public BigDecimal getOpeningBalance() {
+        return openingBalance;
+    }
+
+    public void setOpeningBalance(BigDecimal openingBalance) {
+        this.openingBalance = openingBalance;
+    }
+
+    public void setLedgerAccounts(List<LedgerAccount> ledgerAccounts) {
+        this.ledgerAccounts = ledgerAccounts;
     }
 }
