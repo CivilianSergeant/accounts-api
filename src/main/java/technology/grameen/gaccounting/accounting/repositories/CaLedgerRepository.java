@@ -6,9 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.ChartAccountLedger;
 import technology.grameen.gaccounting.projection.LedgerBalance;
-import technology.grameen.gaccounting.projection.TrialBalance;
-
-import java.util.List;
 
 @Repository
 public interface CaLedgerRepository extends JpaRepository<ChartAccountLedger,Long> {

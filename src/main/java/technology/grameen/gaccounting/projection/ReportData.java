@@ -3,7 +3,7 @@ package technology.grameen.gaccounting.projection;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public interface TrialBalance {
+public interface ReportData {
 
     String getAlias();
     String getPrimaryGroup();

@@ -6,6 +6,8 @@ import java.util.List;
 public class CaType {
 
     String type;
+    String finYearStart;
+    String finYearEnd;
 
     List<PrimaryGroup> primaryGroups = new ArrayList<>();
 
@@ -23,5 +25,21 @@ public class CaType {
 
     public String getType() {
         return type;
+    }
+
+    public String getFinYearStart() {
+        return finYearStart;
+    }
+
+    public void setFinYearStart(String finYearStart) {
+        this.finYearStart = finYearStart;
+    }
+
+    public String getFinYearEnd() {
+        return finYearEnd;
+    }
+
+    public void setFinYearEnd(String finYearEnd) {
+        this.finYearEnd = finYearEnd;
     }
 }

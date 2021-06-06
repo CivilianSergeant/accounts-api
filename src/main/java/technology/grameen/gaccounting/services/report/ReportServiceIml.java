@@ -1,94 +1,141 @@
 package technology.grameen.gaccounting.services.report;
 
 import org.springframework.stereotype.Service;
+import technology.grameen.gaccounting.accounting.entity.GeneralSetting;
+import technology.grameen.gaccounting.accounting.repositories.GeneralSettingRepository;
 import technology.grameen.gaccounting.accounting.repositories.ReportRepository;
-import technology.grameen.gaccounting.projection.TrialBalance;
+import technology.grameen.gaccounting.projection.ReportData;
+import technology.grameen.gaccounting.services.UtilService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ReportServiceIml implements ReportService {
 
     private ReportRepository reportRepository;
-    CaType caType;
-    PrimaryGroup primaryGroup;
-    SubGroup subGroup;
-    LedgerAccount ledgerAccount;
 
-    ReportServiceIml(ReportRepository reportRepository){
+    private CaType caType;
+    private PrimaryGroup primaryGroup;
+    private SubGroup subGroup;
+    private LedgerAccount ledgerAccount;
+    private List<String> root;
+    List<CaType> caTypes;
+    private UtilService utilService;
+
+    ReportServiceIml(ReportRepository reportRepository,
+                     UtilService utilService){
         this.reportRepository = reportRepository;
+        this.utilService = utilService;
+
     }
 
     @Override
     public List<CaType> getTrialBalance() {
-        List<TrialBalance> trialBalances =  reportRepository.getTrialBalance();
-        List<CaType> caTypes = new ArrayList<>();
-        List<String> root = new ArrayList<>();
 
 
-        trialBalances.forEach(t->{
+        caTypes = new ArrayList<>();
 
-            if(!root.contains(t.getAlias())) {
-                root.add(t.getAlias());
-                caType = new CaType(t.getAlias());
-                caTypes.add(caType);
-                if(!root.contains(t.getPrimaryGroup())){
-                    root.add(t.getPrimaryGroup());
-                    primaryGroup = new PrimaryGroup(t.getPrimaryGroup());
-                    caType.getPrimaryGroups().add(primaryGroup);
+            utilService.loadData();
+            String yearStart = utilService.getFinancialStartDate();
+            String yearEnd = utilService.getFinancialEndDate();
 
-                    if(!root.contains(t.getSubGroup())){
-                        root.add(t.getSubGroup());
-                        subGroup = new SubGroup(t.getSubGroup());
-                        primaryGroup.getSubGroups().add(subGroup);
-                    }
-                    if(!root.contains(t.getLedgerAcc())){
-                        root.add(t.getLedgerAcc());
-                        ledgerAccount = new LedgerAccount(t.getId(),t.getLedgerAcc(),
-                                t.getTransType(), t.getOpeningBalance(),t.getDebit(),t.getCredit());
-                        subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
-                        subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
-                        subGroup.getLedgerAccounts().add(ledgerAccount);
-                    }
-                }
-            }else{
-                if(!root.contains(t.getPrimaryGroup())){
-                    root.add(t.getPrimaryGroup());
-                    primaryGroup = new PrimaryGroup(t.getPrimaryGroup());
-                    caType.getPrimaryGroups().add(primaryGroup);
-                }else{
-                    if(!root.contains(t.getSubGroup())){
-                        root.add(t.getSubGroup());
-                        subGroup = new SubGroup(t.getSubGroup());
-                        primaryGroup.getSubGroups().add(subGroup);
-                    }else{
 
-                        if(!root.contains(t.getLedgerAcc())){
-                            root.add(t.getLedgerAcc());
-                            ledgerAccount = new LedgerAccount(t.getId(),t.getLedgerAcc(),
-                                    t.getTransType(), t.getOpeningBalance(),t.getDebit(),t.getCredit());
-                            subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
-                            subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
-                            subGroup.getLedgerAccounts().add(ledgerAccount);
-                        }else {
+            List<ReportData> reportData =  reportRepository.getTrialBalance();
 
-                            ledgerAccount.setDebit(ledgerAccount.getDebit().add(t.getDebit()));
-                            ledgerAccount.setCredit(ledgerAccount.getCredit().add(t.getCredit()));
-//                            ledgerAccount = new LedgerAccount(t.getId(), t.getLedgerAcc(),
-//                                    t.getTransType(), t.getOpeningBalance(), t.getDebit(), t.getCredit());
-                            subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
-                            subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
-//                            subGroup.getLedgerAccounts().add(ledgerAccount);
-                        }
-                    }
-                }
+            root = new ArrayList<>();
 
-            }
+
+            reportData.forEach((ReportData t)->{
+                this.processData(root,t,yearStart,yearEnd);
+            });
+
+
+        return caTypes;
+    }
+
+    @Override
+    public List<CaType> getIncomeStatement() {
+        utilService.loadData();
+        String yearStart = utilService.getFinancialStartDate();
+        String yearEnd = utilService.getFinancialEndDate();
+        caTypes = new ArrayList<>();
+        root = new ArrayList<>();
+
+        List<ReportData> reportData = reportRepository.getLedgerWiseTransactions("income");
+        reportData.forEach((ReportData t)->{
+            this.processData(root,t,yearStart,yearEnd);
+        });
+
+        reportData = reportRepository.getLedgerWiseTransactions("expense");
+        reportData.forEach((ReportData t)->{
+            this.processData(root,t,yearStart,yearEnd);
         });
 
         return caTypes;
+    }
+
+    private void  processData (List<String> root, ReportData t, String yearStart, String yearEnd){
+        if(!root.contains(t.getAlias())) {
+            root.add(t.getAlias());
+            caType = new CaType(t.getAlias());
+            caType.setFinYearStart(yearStart);
+            caType.setFinYearEnd(yearEnd);
+
+            caTypes.add(caType);
+            if(!root.contains(t.getPrimaryGroup())){
+                root.add(t.getPrimaryGroup());
+                primaryGroup = new PrimaryGroup(t.getPrimaryGroup());
+                caType.getPrimaryGroups().add(primaryGroup);
+
+                if(!root.contains(t.getSubGroup())){
+                    root.add(t.getSubGroup());
+                    subGroup = new SubGroup(t.getSubGroup());
+                    primaryGroup.getSubGroups().add(subGroup);
+                }
+                this.addLedgerAccount(t,true);
+            }
+        }else{
+            if(!root.contains(t.getPrimaryGroup())){
+                root.add(t.getPrimaryGroup());
+                primaryGroup = new PrimaryGroup(t.getPrimaryGroup());
+                caType.getPrimaryGroups().add(primaryGroup);
+            }else{
+                if(!root.contains(t.getSubGroup())){
+                    root.add(t.getSubGroup());
+                    subGroup = new SubGroup(t.getSubGroup());
+                    primaryGroup.getSubGroups().add(subGroup);
+                }else{
+
+                   this.addLedgerAccount(t,true);
+                }
+            }
+
+        }
+    }
+
+    private void addLedgerAccount(ReportData t, Boolean isNew ){
+        if(!root.contains(t.getLedgerAcc())) {
+            root.add(t.getLedgerAcc());
+            ledgerAccount = new LedgerAccount(t.getId(), t.getLedgerAcc(),
+                    t.getTransType(), t.getOpeningBalance(), t.getDebit(), t.getCredit());
+            this.updateGroup(t, isNew);
+        }else {
+            this.updateLedgerAccount(t);
+        }
+    }
+
+    private void updateLedgerAccount(ReportData t){
+        ledgerAccount.setDebit(ledgerAccount.getDebit().add(t.getDebit()));
+        ledgerAccount.setCredit(ledgerAccount.getCredit().add(t.getCredit()));
+        this.updateGroup(t,false);
+    }
+
+    private void updateGroup(ReportData t, Boolean isNew){
+        subGroup.setDebit(subGroup.getDebit().add(t.getDebit()));
+        subGroup.setCredit(subGroup.getCredit().add(t.getCredit()));
+        if(isNew) {
+            subGroup.getLedgerAccounts().add(ledgerAccount);
+        }
     }
 }

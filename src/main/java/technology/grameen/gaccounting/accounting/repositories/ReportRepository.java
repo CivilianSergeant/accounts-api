@@ -2,9 +2,10 @@ package technology.grameen.gaccounting.accounting.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
-import technology.grameen.gaccounting.projection.TrialBalance;
+import technology.grameen.gaccounting.projection.ReportData;
 
 import java.util.List;
 
@@ -40,5 +41,28 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID\n" +
             "                        GROUP BY g.TITLE,g1.TITLE, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.transaction_type\n" +
             "                        ORDER BY alias asc",nativeQuery = true)
-    List<TrialBalance> getTrialBalance();
+    List<ReportData> getTrialBalance();
+
+
+    @Query(value = "SELECT p.alias, g1.TITLE AS primaryGroup,g.TITLE AS subGroup,p.TITLE AS ledgerAcc, p.transaction_Type AS transType, p.id, " +
+            " p.OPENING_BALANCE AS openingBalance, " +
+            " SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM ( " +
+            " SELECT  v.created_at, t.TRANSACTION_TYPE,  ca.ID, ca.PARENT_ID,cal.OPENING_BALANCE, cat.ALIAS, TITLE, NVL(CASE WHEN TRANSACTION_TYPE='dr' THEN SUM(NVL(AMOUNT,0)) END,0) AS debit, " +
+            "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit " +
+            "                        FROM CA_LEDGERS cal  " +
+            "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID " +
+            "                        INNER JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID " +
+            "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
+            "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID " +
+            " WHERE cat.alias = :caType " +
+            "                        GROUP BY v.created_at, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE) p " +
+            " LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID " +
+            "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID " +
+            "                        GROUP BY g.TITLE,g1.TITLE, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.transaction_Type " +
+            "                        ORDER BY alias asc",
+    nativeQuery = true)
+    List<ReportData> getLedgerWiseTransactions(@Param("caType") String caType);
+
+
+
 }
