@@ -35,4 +35,12 @@ public class ReportController {
                 reportService.getIncomeStatement()
         ), HttpStatus.OK);
     }
+
+    @GetMapping("/balance-sheet")
+    public ResponseEntity<IResponse> getBalanceSheet(){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                reportService.getBalanceSheet()
+        ), HttpStatus.OK);
+    }
 }

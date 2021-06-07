@@ -8,4 +8,5 @@ public interface ReportService {
     List<CaType> getTrialBalance();
 
     Map<String, Object> getIncomeStatement();
+    Map<String, Object> getBalanceSheet();
 }

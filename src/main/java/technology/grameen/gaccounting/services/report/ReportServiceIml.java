@@ -103,6 +103,42 @@ public class ReportServiceIml implements ReportService {
         return result;
     }
 
+
+    @Override
+    public Map<String, Object> getBalanceSheet() {
+        utilService.loadData();
+        String yearStart = utilService.getFinancialStartDate();
+        String yearEnd = utilService.getFinancialEndDate();
+        caTypes = new ArrayList<>();
+        root = new ArrayList<>();
+        List<String> assetTypes = new ArrayList<>();
+        assetTypes.add("asset");
+        assetTypes.add("drawings");
+        List<ReportData> assetData = reportRepository.getLedgerWiseTransactionsByTypes(assetTypes);
+        Map<String, Object> result = new HashMap<>();
+        assetData.stream().forEach((ReportData r)->{
+            this.processData(root,r,yearStart,yearEnd);
+        });
+
+        result.put("asset",caTypes);
+        caTypes = new ArrayList<>();
+
+        List<String> liabilitiesTypes = new ArrayList<>();
+        assetTypes.add("liabilities");
+        assetTypes.add("capital");
+        List<ReportData> liabilitiesData = reportRepository.getLedgerWiseTransactionsByTypes(liabilitiesTypes);
+        liabilitiesData.stream().forEach((ReportData r)->{
+            this.processData(root,r,yearStart,yearEnd);
+        });
+        result.put("liabilities",caTypes);
+
+        Object netProfit = (this.getIncomeStatement()).get("netProfit");
+
+        result.put("netProfit",netProfit);
+
+        return result;
+    }
+
     private void  processData (List<String> root, ReportData t, String yearStart, String yearEnd){
         if(!root.contains(t.getAlias())) {
             root.add(t.getAlias());
