@@ -11,6 +11,7 @@ public class PrimaryGroup {
     BigDecimal debitAmount = BigDecimal.valueOf(0);
     BigDecimal creditAmount = BigDecimal.valueOf(0);
     BigDecimal openingBalance = BigDecimal.valueOf(0);
+    BigDecimal openingCreditBalance = BigDecimal.valueOf(0);
 
     List<SubGroup> subGroups = new ArrayList<>();
 
@@ -55,5 +56,13 @@ public class PrimaryGroup {
 
     public void setOpeningBalance(BigDecimal openingBalance) {
         this.openingBalance = openingBalance;
+    }
+
+    public BigDecimal getOpeningCreditBalance() {
+        return openingCreditBalance;
+    }
+
+    public void setOpeningCreditBalance(BigDecimal openingCreditBalance) {
+        this.openingCreditBalance = openingCreditBalance;
     }
 }

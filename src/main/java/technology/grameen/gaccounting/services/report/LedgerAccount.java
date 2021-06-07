@@ -7,14 +7,19 @@ public class LedgerAccount {
     String ledgerAcc;
     String transType;
     BigDecimal openingBalance;
+    BigDecimal openingCreditBalance;
+
     BigDecimal debit;
     BigDecimal credit;
 
-    public LedgerAccount(Long id, String ledgerAcc, String transType, BigDecimal openingBalance, BigDecimal debit, BigDecimal credit) {
+    public LedgerAccount(Long id, String ledgerAcc, String transType, BigDecimal openingBalance,
+                         BigDecimal openingCreditBalance,
+                         BigDecimal debit, BigDecimal credit) {
         this.id = id;
         this.ledgerAcc = ledgerAcc;
         this.transType = transType;
         this.openingBalance = openingBalance;
+        this.openingCreditBalance = openingCreditBalance;
         this.debit = debit;
         this.credit = credit;
     }
@@ -33,6 +38,10 @@ public class LedgerAccount {
 
     public BigDecimal getOpeningBalance() {
         return openingBalance;
+    }
+
+    public BigDecimal getOpeningCreditBalance() {
+        return openingCreditBalance;
     }
 
     public BigDecimal getDebit() {

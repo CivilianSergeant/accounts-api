@@ -118,7 +118,7 @@ public class ReportServiceIml implements ReportService {
         if(!root.contains(t.getLedgerAcc())) {
             root.add(t.getLedgerAcc());
             ledgerAccount = new LedgerAccount(t.getId(), t.getLedgerAcc(),
-                    t.getTransType(), t.getOpeningBalance(), t.getDebit(), t.getCredit());
+                    t.getTransType(), t.getOpeningBalance(), t.getOpeningCreditBalance(), t.getDebit(), t.getCredit());
 //            primaryGroup.setDebitAmount(primaryGroup.getDebitAmount().add(t.getDebit()));
 //            primaryGroup.setCreditAmount(primaryGroup.getCreditAmount().add(t.getCredit()));
             this.updateGroup(t, isNew);
@@ -142,7 +142,10 @@ public class ReportServiceIml implements ReportService {
 
         if(isNew) {
             subGroup.setOpeningBalance(subGroup.getOpeningBalance().add(t.getOpeningBalance()));
+            subGroup.setOpeningCreditBalance(subGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
+
             primaryGroup.setOpeningBalance(primaryGroup.getOpeningBalance().add(t.getOpeningBalance()));
+            primaryGroup.setOpeningCreditBalance(primaryGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
             subGroup.getLedgerAccounts().add(ledgerAccount);
         }
     }

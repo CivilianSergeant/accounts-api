@@ -12,6 +12,7 @@ public interface ReportData {
     String getLedgerAcc();
     Long getId();
     BigDecimal getOpeningBalance();
+    BigDecimal getOpeningCreditBalance();
     BigDecimal getDebit();
     BigDecimal getCredit();
 }

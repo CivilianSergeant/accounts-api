@@ -37,6 +37,8 @@ public class ChartAccountLedger {
 
     private BigDecimal openingBalance;
 
+    private BigDecimal openingCreditBalance;
+
     @OneToOne(fetch = FetchType.LAZY)
     private ChartAccount chartAccount;
 
@@ -142,5 +144,13 @@ public class ChartAccountLedger {
 
     public void setChartAccount(ChartAccount chartAccount) {
         this.chartAccount = chartAccount;
+    }
+
+    public BigDecimal getOpeningCreditBalance() {
+        return openingCreditBalance;
+    }
+
+    public void setOpeningCreditBalance(BigDecimal openingCreditBalance) {
+        this.openingCreditBalance = openingCreditBalance;
     }
 }
