@@ -14,7 +14,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
 
     @Query(value = "SELECT p.alias, g1.TITLE AS primaryGroup,g.TITLE AS subGroup,p.TITLE AS ledgerAcc, " +
             "p.transaction_Type AS transType,  p.id,\n" +
-            "\tp.OPENING_BALANCE AS openingBalance, p.opening_credit_balance as openingCreditBalance, \n" +
+            "\tp.OPENING_BALANCE AS openingBalance, NVL(p.opening_credit_balance,0) as openingCreditBalance, \n" +
             "            CASE \n" +
             "            WHEN p.alias = 'asset' THEN \n" +
             "            \t(p.OPENING_BALANCE+(SUM(DEBIT)-SUM(CREDIT))) \n" +
