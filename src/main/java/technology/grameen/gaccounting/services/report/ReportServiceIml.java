@@ -7,6 +7,7 @@ import technology.grameen.gaccounting.accounting.repositories.ReportRepository;
 import technology.grameen.gaccounting.projection.ReportData;
 import technology.grameen.gaccounting.services.UtilService;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -22,6 +23,8 @@ public class ReportServiceIml implements ReportService {
     private List<String> root;
     List<CaType> caTypes;
     private UtilService utilService;
+    Double totalCreditAmount = 0.0;
+    Double totalDebitAmount = 0.0;
 
     ReportServiceIml(ReportRepository reportRepository,
                      UtilService utilService){
@@ -55,24 +58,49 @@ public class ReportServiceIml implements ReportService {
     }
 
     @Override
-    public List<CaType> getIncomeStatement() {
+    public Map<String,Object> getIncomeStatement() {
         utilService.loadData();
+        totalDebitAmount = 0.0;
+        totalCreditAmount = 0.0;
         String yearStart = utilService.getFinancialStartDate();
         String yearEnd = utilService.getFinancialEndDate();
         caTypes = new ArrayList<>();
         root = new ArrayList<>();
+
 
         List<ReportData> reportData = reportRepository.getLedgerWiseTransactions("income");
         reportData.forEach((ReportData t)->{
             this.processData(root,t,yearStart,yearEnd);
         });
 
+        Optional<CaType> incomeType = caTypes.stream()
+                                .filter(ct->ct.type.equalsIgnoreCase("income"))
+                                .findFirst();
+        incomeType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg)->{
+            totalCreditAmount+= pg.getCreditAmount().doubleValue();
+            totalDebitAmount+= pg.getDebitAmount().doubleValue();
+        });
+
+
         reportData = reportRepository.getLedgerWiseTransactions("expense");
         reportData.forEach((ReportData t)->{
             this.processData(root,t,yearStart,yearEnd);
         });
 
-        return caTypes;
+        Optional<CaType> expenseType = caTypes.stream()
+                                        .filter(ct->ct.type.equalsIgnoreCase("expense"))
+                                        .findFirst();
+
+        expenseType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg)->{
+            totalCreditAmount+= pg.getCreditAmount().doubleValue();
+            totalDebitAmount+= pg.getDebitAmount().doubleValue();
+        });
+
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("records",caTypes);
+        result.put("netProfit",(totalCreditAmount-totalDebitAmount));
+        return result;
     }
 
     private void  processData (List<String> root, ReportData t, String yearStart, String yearEnd){

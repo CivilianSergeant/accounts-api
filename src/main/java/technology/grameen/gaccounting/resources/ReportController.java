@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import technology.grameen.gaccounting.responses.EntityCollectionResponse;
+import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.report.ReportService;
 
@@ -29,7 +30,7 @@ public class ReportController {
 
     @GetMapping("/income-statement")
     public ResponseEntity<IResponse> getIncomeStatement(){
-        return new ResponseEntity<>(new EntityCollectionResponse<>(
+        return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
                 reportService.getIncomeStatement()
         ), HttpStatus.OK);
