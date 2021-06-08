@@ -17,6 +17,7 @@ public interface LedgerDetail extends GroupDetail {
         Integer getRoundingLimit();
         BigDecimal getCurrentBalance();
         BigDecimal getOpeningBalance();
+        BigDecimal getOpeningCreditBalance();
     }
 
 

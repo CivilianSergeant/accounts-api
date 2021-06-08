@@ -33,7 +33,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit \n" +
             "                        FROM CA_LEDGERS cal \n" +
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID\n" +
-            "                        INNER JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID\n" +
+            "                        LEFT JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID\n" +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID  \n" +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID  \n" +
             "                        GROUP BY v.created_at, t.transaction_type, ca.ID, ca.PARENT_ID, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE, cal.opening_credit_balance) p\n" +
@@ -51,7 +51,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit " +
             "                        FROM CA_LEDGERS cal  " +
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID " +
-            "                        INNER JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID " +
+            "                        LEFT JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID " +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID " +
             " WHERE cat.alias = :caType " +
@@ -72,7 +72,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit " +
             "                        FROM CA_LEDGERS cal  " +
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID " +
-            "                        INNER JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID " +
+            "                        LEFT JOIN VOUCHERS v ON  v.ID = t.VOUCHER_ID " +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID " +
             " WHERE cat.alias IN :caTypes " +
