@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
@@ -31,6 +32,8 @@ public class Transaction {
     private Integer officeId;
 
     private Short officeTypeId;
+
+    private LocalDateTime transactionDate;
 
     @Value("${keycloak.realm")
     private String realm;
@@ -113,5 +116,13 @@ public class Transaction {
 
     public void setRealm(String realm) {
         this.realm = realm;
+    }
+
+    public LocalDateTime getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(LocalDateTime transactionDate) {
+        this.transactionDate = transactionDate;
     }
 }
