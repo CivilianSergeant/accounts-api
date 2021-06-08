@@ -107,5 +107,13 @@ public class CaController {
         ), HttpStatus.OK);
     }
 
+    @GetMapping("/ledger/opening-balance-diff")
+    public ResponseEntity<IResponse> getOpeningBalanceDifference(){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                caService.getOpeningBalanceDiff()
+        ), HttpStatus.OK);
+    }
+
 
 }

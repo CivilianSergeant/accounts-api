@@ -8,6 +8,7 @@ import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -86,5 +87,10 @@ public class CaServiceImpl implements CaService{
     @Override
     public LedgerBalance getLedgerBalance(Long id) {
         return caLedgerService.getBalance(id);
+    }
+
+    @Override
+    public Optional<OpeningBalanceDiff> getOpeningBalanceDiff() {
+        return caLedgerService.getOpeningBalanceDifference();
     }
 }

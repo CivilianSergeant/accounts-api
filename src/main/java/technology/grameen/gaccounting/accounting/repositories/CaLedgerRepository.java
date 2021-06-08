@@ -6,6 +6,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.ChartAccountLedger;
 import technology.grameen.gaccounting.projection.LedgerBalance;
+import technology.grameen.gaccounting.projection.OpeningBalanceDiff;
+
+import java.util.Optional;
 
 @Repository
 public interface CaLedgerRepository extends JpaRepository<ChartAccountLedger,Long> {
@@ -35,6 +38,17 @@ public interface CaLedgerRepository extends JpaRepository<ChartAccountLedger,Lon
             " GROUP BY ca.ID, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE) p " +
             " GROUP BY p.TITLE, p.ID, p.alias,p.OPENING_BALANCE",nativeQuery = true)
     LedgerBalance getLedgerBalance(@Param("caID") Long ledgerAccountId);
+
+
+    @Query(value = "SELECT SUM(NVL(OPENING_BALANCE,0)) as totalOpeningDr, " +
+            " SUM(NVL(OPENING_CREDIT_BALANCE,0)) AS totalOpeningCr, " +
+            " ABS(SUM(NVL(OPENING_BALANCE,0))-SUM(NVL(OPENING_CREDIT_BALANCE,0))) AS differenceAmount, " +
+            " CASE WHEN (SUM(NVL(OPENING_BALANCE,0))> SUM(NVL(OPENING_CREDIT_BALANCE,0))) " +
+            " THEN 'Dr' ELSE 'Cr' END AS balanceType " +
+            " FROM CA_LEDGERS cal " +
+            " JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
+            " JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID",nativeQuery = true)
+    Optional<OpeningBalanceDiff> getTotalOpeningBalanceDifference();
 
 
 

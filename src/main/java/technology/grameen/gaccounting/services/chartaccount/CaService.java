@@ -5,6 +5,7 @@ import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface CaService {
@@ -16,6 +17,7 @@ public interface CaService {
     Optional<GroupDetail> getGroupDetail(Long id);
     Optional<LedgerDetail> getLedgerDetail(Long id);
     LedgerBalance getLedgerBalance(Long id);
+    Optional<OpeningBalanceDiff> getOpeningBalanceDiff();
 
     ChartAccount addChartAccount(ChartAccount chartAccount) throws CustomException;
 }

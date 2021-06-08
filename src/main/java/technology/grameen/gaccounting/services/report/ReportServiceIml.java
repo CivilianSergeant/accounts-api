@@ -113,7 +113,6 @@ public class ReportServiceIml implements ReportService {
         root = new ArrayList<>();
         List<String> assetTypes = new ArrayList<>();
         assetTypes.add("asset");
-        assetTypes.add("drawings");
         List<ReportData> assetData = reportRepository.getLedgerWiseTransactionsByTypes(assetTypes);
         Map<String, Object> result = new HashMap<>();
         assetData.stream().forEach((ReportData r)->{
@@ -124,8 +123,10 @@ public class ReportServiceIml implements ReportService {
         caTypes = new ArrayList<>();
 
         List<String> liabilitiesTypes = new ArrayList<>();
-        assetTypes.add("liabilities");
-        assetTypes.add("capital");
+        liabilitiesTypes.add("liabilities");
+        liabilitiesTypes.add("capital");
+        liabilitiesTypes.add("drawings");
+
         List<ReportData> liabilitiesData = reportRepository.getLedgerWiseTransactionsByTypes(liabilitiesTypes);
         liabilitiesData.stream().forEach((ReportData r)->{
             this.processData(root,r,yearStart,yearEnd);

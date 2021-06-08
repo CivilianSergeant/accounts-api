@@ -5,6 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import technology.grameen.gaccounting.accounting.entity.ChartAccountLedger;
 import technology.grameen.gaccounting.accounting.repositories.CaLedgerRepository;
 import technology.grameen.gaccounting.projection.LedgerBalance;
+import technology.grameen.gaccounting.projection.OpeningBalanceDiff;
+
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CaLedgerServiceImpl implements CaLedgerService{
@@ -24,5 +28,10 @@ public class CaLedgerServiceImpl implements CaLedgerService{
     @Override
     public LedgerBalance getBalance(Long id) {
         return caLedgerRepository.getLedgerBalance(id);
+    }
+
+    @Override
+    public Optional<OpeningBalanceDiff> getOpeningBalanceDifference() {
+        return caLedgerRepository.getTotalOpeningBalanceDifference();
     }
 }
