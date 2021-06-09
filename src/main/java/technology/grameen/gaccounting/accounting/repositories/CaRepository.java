@@ -33,7 +33,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
             "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
     List<LedgerAccountList> findAllLedgerAccounts();
 
-    @Query(value = "SELECT cas.id, cat.id as caTypeId, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
+    @Query(value = "SELECT cas.id, cas.ca_level as caLevel, cat.id as caTypeId, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
             "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +

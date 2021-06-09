@@ -11,16 +11,16 @@ public class ChartAccountLedger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String contactName;
 
     @Column(length = 100)
     private String contactEmail;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String contactPhone;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 500)
     private String contactAddress;
 
     private Boolean isMaintainByBill;

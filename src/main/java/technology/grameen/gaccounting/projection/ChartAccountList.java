@@ -10,4 +10,5 @@ public interface ChartAccountList {
     String getParent();
     String getCaCode();
     Integer getIsLedger();
+    Integer getCaLevel();
 }
