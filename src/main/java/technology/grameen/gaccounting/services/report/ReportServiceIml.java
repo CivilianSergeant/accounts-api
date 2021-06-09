@@ -76,10 +76,12 @@ public class ReportServiceIml implements ReportService {
         Optional<CaType> incomeType = caTypes.stream()
                                 .filter(ct->ct.type.equalsIgnoreCase("income"))
                                 .findFirst();
-        incomeType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg)->{
-            totalCreditAmount+= pg.getCreditAmount().doubleValue();
-            totalDebitAmount+= pg.getDebitAmount().doubleValue();
-        });
+        if(incomeType.isPresent()) {
+            incomeType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg) -> {
+                totalCreditAmount += pg.getCreditAmount().doubleValue();
+                totalDebitAmount += pg.getDebitAmount().doubleValue();
+            });
+        }
 
 
         reportData = reportRepository.getLedgerWiseTransactions("expense", yearStart, yearEnd);
@@ -91,11 +93,12 @@ public class ReportServiceIml implements ReportService {
                                         .filter(ct->ct.type.equalsIgnoreCase("expense"))
                                         .findFirst();
 
-        expenseType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg)->{
-            totalCreditAmount+= pg.getCreditAmount().doubleValue();
-            totalDebitAmount+= pg.getDebitAmount().doubleValue();
-        });
-
+        if(expenseType.isPresent()) {
+            expenseType.get().getPrimaryGroups().stream().forEach((PrimaryGroup pg) -> {
+                totalCreditAmount += pg.getCreditAmount().doubleValue();
+                totalDebitAmount += pg.getDebitAmount().doubleValue();
+            });
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("records",caTypes);
@@ -184,8 +187,6 @@ public class ReportServiceIml implements ReportService {
             root.add(t.getLedgerAcc());
             ledgerAccount = new LedgerAccount(t.getId(), t.getLedgerAcc(),
                     t.getTransType(), t.getOpeningBalance(), t.getOpeningCreditBalance(), t.getDebit(), t.getCredit());
-//            primaryGroup.setDebitAmount(primaryGroup.getDebitAmount().add(t.getDebit()));
-//            primaryGroup.setCreditAmount(primaryGroup.getCreditAmount().add(t.getCredit()));
             this.updateGroup(t, isNew);
         }else {
             this.updateLedgerAccount(t);

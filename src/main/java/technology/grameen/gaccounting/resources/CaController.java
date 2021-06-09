@@ -68,11 +68,14 @@ public class CaController {
         if(chartAccount1.getChartAccountLedger()!=null) {
             chartAccount1.getChartAccountLedger().setChartAccount(null);
         }
-        chartAccount1.getChartAccountType().setChartAccounts(null);
+        chartAccount1.setChartAccountType(null);
+//
+//        if(chartAccount1.getParent()!=null){
+//            chartAccount1.getParent().setChildren(null);
+//            chartAccount1.getParent().setChartAccountType(null);
+//        }
 
-        if(chartAccount1.getParent()!=null){
-            chartAccount1.getParent().setChildren(null);
-        }
+        chartAccount1.setParent(null);
 
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
