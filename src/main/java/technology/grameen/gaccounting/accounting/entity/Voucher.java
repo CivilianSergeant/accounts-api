@@ -53,6 +53,9 @@ public class Voucher {
     @OneToMany(mappedBy = "voucher")
     private Set<Transaction> transactions;
 
+    @OneToMany(mappedBy = "voucher")
+    private Set<TransactionReference> transactionReferences;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

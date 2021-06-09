@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "transactions")
@@ -37,6 +38,9 @@ public class Transaction {
 
     @Value("${keycloak.realm")
     private String realm;
+
+    @OneToMany(mappedBy = "transaction")
+    private Set<TransactionReference> transactionReferences;
 
     public Long getId() {
         return id;
@@ -124,5 +128,13 @@ public class Transaction {
 
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public Set<TransactionReference> getTransactionReferences() {
+        return transactionReferences;
+    }
+
+    public void setTransactionReferences(Set<TransactionReference> transactionReferences) {
+        this.transactionReferences = transactionReferences;
     }
 }

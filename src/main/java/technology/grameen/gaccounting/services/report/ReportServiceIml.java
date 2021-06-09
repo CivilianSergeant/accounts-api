@@ -8,6 +8,7 @@ import technology.grameen.gaccounting.projection.ReportData;
 import technology.grameen.gaccounting.services.UtilService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -43,8 +44,7 @@ public class ReportServiceIml implements ReportService {
             String yearStart = utilService.getFinancialStartDate();
             String yearEnd = utilService.getFinancialEndDate();
 
-
-            List<ReportData> reportData =  reportRepository.getTrialBalance();
+            List<ReportData> reportData =  reportRepository.getTrialBalance(yearStart,yearEnd);
 
             root = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class ReportServiceIml implements ReportService {
         root = new ArrayList<>();
 
 
-        List<ReportData> reportData = reportRepository.getLedgerWiseTransactions("income");
+        List<ReportData> reportData = reportRepository.getLedgerWiseTransactions("income",yearStart,yearEnd);
         reportData.forEach((ReportData t)->{
             this.processData(root,t,yearStart,yearEnd);
         });
@@ -82,7 +82,7 @@ public class ReportServiceIml implements ReportService {
         });
 
 
-        reportData = reportRepository.getLedgerWiseTransactions("expense");
+        reportData = reportRepository.getLedgerWiseTransactions("expense", yearStart, yearEnd);
         reportData.forEach((ReportData t)->{
             this.processData(root,t,yearStart,yearEnd);
         });
@@ -113,7 +113,7 @@ public class ReportServiceIml implements ReportService {
         root = new ArrayList<>();
         List<String> assetTypes = new ArrayList<>();
         assetTypes.add("asset");
-        List<ReportData> assetData = reportRepository.getLedgerWiseTransactionsByTypes(assetTypes);
+        List<ReportData> assetData = reportRepository.getLedgerWiseTransactionsByTypes(assetTypes,yearStart,yearEnd);
         Map<String, Object> result = new HashMap<>();
         assetData.stream().forEach((ReportData r)->{
             this.processData(root,r,yearStart,yearEnd);
@@ -127,7 +127,7 @@ public class ReportServiceIml implements ReportService {
         liabilitiesTypes.add("capital");
         liabilitiesTypes.add("drawings");
 
-        List<ReportData> liabilitiesData = reportRepository.getLedgerWiseTransactionsByTypes(liabilitiesTypes);
+        List<ReportData> liabilitiesData = reportRepository.getLedgerWiseTransactionsByTypes(liabilitiesTypes,yearStart,yearEnd);
         liabilitiesData.stream().forEach((ReportData r)->{
             this.processData(root,r,yearStart,yearEnd);
         });

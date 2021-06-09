@@ -1,26 +1,35 @@
 package technology.grameen.gaccounting.accounting.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transaction_reference")
+@Table(name = "transaction_references")
 public class TransactionReference {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String type;
-    String refNo;
-    LocalDateTime dueOrCreditDate;
-    String name;
-    BigDecimal amount;
-    String transactionType;
-    Boolean status;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    @ManyToOne
+    private Voucher voucher;
+
+    @ManyToOne
+    private Transaction transaction;
+
+    private String type;
+    private String refNo;
+    private LocalDateTime dueOrCreditDate;
+    private String name;
+    private BigDecimal amount;
+    private String transactionType;
+    private Boolean status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public Long getId() {
         return id;
@@ -100,5 +109,23 @@ public class TransactionReference {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @JsonBackReference(value = "voucher")
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
+    }
+
+    @JsonBackReference(value = "transaction")
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

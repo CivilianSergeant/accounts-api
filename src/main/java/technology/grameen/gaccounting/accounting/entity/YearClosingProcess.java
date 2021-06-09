@@ -5,6 +5,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "year_closing_processes")
@@ -25,6 +26,9 @@ public class YearClosingProcess {
     private String balanceSheetPath;
     private Integer createdBy;
     private Integer closedBy;
+
+    @OneToMany(mappedBy = "process")
+    private Set<LedgerBalanceHistory> ledgerBalanceHistories;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

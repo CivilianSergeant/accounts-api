@@ -1,5 +1,8 @@
 package technology.grameen.gaccounting.accounting.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -49,10 +52,16 @@ public class ChartAccount {
     @OneToOne(mappedBy = "chartAccount",fetch = FetchType.LAZY)
     private ChartAccountLedger chartAccountLedger;
 
+    @OneToMany(mappedBy = "chartAccount")
+    private Set<LedgerBalanceHistory> ledgerBalanceHistories;
+
     private Integer createdBy;
     private Integer updatedBy;
 
+    @CreationTimestamp
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public Long getId() {
