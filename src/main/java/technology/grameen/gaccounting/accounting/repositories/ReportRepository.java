@@ -12,9 +12,8 @@ import java.util.List;
 @Repository
 public interface ReportRepository extends JpaRepository<Voucher, Long> {
 
-    @Query(value = "SELECT p.alias, g1.TITLE AS primaryGroup,g.TITLE AS subGroup,p.TITLE AS ledgerAcc, " +
-            "p.transaction_Type AS transType,  p.id,\n" +
-            "NVL(p.OPENING_BALANCE,0) AS openingBalance, NVL(p.opening_credit_balance,0) as openingCreditBalance, \n" +
+    @Query(value = "SELECT p.alias, CASE WHEN g1.TITLE IS NULL THEN g.TITLE ELSE (g1.CODE || ' ' || g1.TITLE) END AS primaryGroup,(g.code || ' ' || g.TITLE) AS subGroup, (p.code || ' ' || p.TITLE) AS ledgerAcc, p.transaction_Type AS transType, p.id,\n" +
+            "\tp.OPENING_BALANCE AS openingBalance,  NVL(p.OPENING_CREDIT_BALANCE,0) openingCreditBalance,\n" +
             "            CASE \n" +
             "            WHEN p.alias = 'asset' THEN \n" +
             "            \t(p.OPENING_BALANCE+(SUM(DEBIT)-SUM(CREDIT))) \n" +
@@ -29,42 +28,44 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "            WHEN p.alias = 'liabilities' THEN  \n" +
             "            \t(p.OPENING_BALANCE+(SUM(CREDIT)-SUM(DEBIT) ))\n" +
             "            END AS BALANCE, \n" +
-            "            SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM (SELECT t.TRANSACTION_DATE, t.transaction_type,  ca.ID, ca.PARENT_ID,cal.OPENING_BALANCE, cal.opening_credit_balance, cat.ALIAS, TITLE, NVL(CASE WHEN TRANSACTION_TYPE='dr' THEN SUM(NVL(AMOUNT,0)) END,0) AS debit, \n" +
+            "            SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM (SELECT t.TRANSACTION_DATE, t.TRANSACTION_TYPE,  ca.ID, ca.PARENT_ID,cal.OPENING_BALANCE, \n" +
+            "            cal.OPENING_CREDIT_BALANCE,\n" +
+            "            cat.ALIAS, TITLE, ca.CODE, NVL(CASE WHEN TRANSACTION_TYPE='dr' THEN SUM(NVL(AMOUNT,0)) END,0) AS debit, \n" +
             "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit \n" +
             "                        FROM CA_LEDGERS cal \n" +
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID\n" +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID  \n" +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID  \n" +
-            "                        WHERE (t.TRANSACTION_DATE IS NULL OR t.TRANSACTION_DATE BETWEEN TO_DATE(:yearStart,'yyyy-mm-dd') AND TO_DATE(:yearEnd,'yyyy-mm-dd') ) \n"+
-            "                        GROUP BY t.TRANSACTION_DATE, t.transaction_type, ca.ID, ca.PARENT_ID, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE, cal.opening_credit_balance) p\n" +
+            "\t\t\t              WHERE (t.TRANSACTION_DATE IS NULL OR t.TRANSACTION_DATE BETWEEN TO_DATE(:yearStart,'YYYY-MM-DD') AND TO_DATE(:yearEnd,'yyyy-mm-dd') )\n" +
+            "                        GROUP BY t.TRANSACTION_DATE, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, ca.CODE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID\n" +
-            "                        GROUP BY g.TITLE,g1.TITLE, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.opening_credit_balance,p.transaction_type\n" +
+            "                        GROUP BY g.TITLE,g.code,g1.code,g1.TITLE, p.TITLE, p.code, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type\n" +
             "                        ORDER BY alias asc",nativeQuery = true)
     List<ReportData> getTrialBalance(@Param("yearStart") String yearStart, @Param("yearEnd") String yearEnd);
 
 
-    @Query(value = "SELECT p.alias, g1.TITLE AS primaryGroup,g.TITLE AS subGroup,p.TITLE AS ledgerAcc, p.transaction_Type AS transType, p.id, " +
-            " NVL(p.OPENING_BALANCE,0) AS openingBalance,NVL(p.OPENING_CREDIT_BALANCE,0) AS openingCreditBalance, " +
-            " SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM ( " +
-            " SELECT  t.transaction_date, t.TRANSACTION_TYPE,  ca.ID, ca.PARENT_ID,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE, cat.ALIAS, TITLE, NVL(CASE WHEN TRANSACTION_TYPE='dr' THEN SUM(NVL(AMOUNT,0)) END,0) AS debit, " +
-            "                        NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit " +
-            "                        FROM CA_LEDGERS cal  " +
-            "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID " +
-            "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
-            "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID " +
-            " WHERE cat.alias = :caType AND (t.transaction_date IS NULL OR t.transaction_date BETWEEN to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))" +
-            "                        GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p " +
-            " LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID " +
-            "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID " +
-            "                        GROUP BY g.TITLE,g1.TITLE, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type " +
-            "                        ORDER BY alias asc",
+    @Query(value = "SELECT p.alias, CASE WHEN g1.TITLE IS NULL THEN (g.TITLE) ELSE (g1.CODE || ' ' || g1.TITLE) END AS primaryGroup,(g.code || ' ' || g.TITLE) AS subGroup,(p.CODE || ' ' ||p.TITLE) AS ledgerAcc, p.transaction_Type AS transType, p.id, \n" +
+            "            NVL(p.OPENING_BALANCE,0) AS openingBalance,NVL(p.OPENING_CREDIT_BALANCE,0) AS openingCreditBalance, \n" +
+            "            SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM ( \n" +
+            "            SELECT  t.transaction_date, t.TRANSACTION_TYPE,  ca.ID, ca.code, ca.PARENT_ID,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE, cat.ALIAS, TITLE, NVL(CASE WHEN TRANSACTION_TYPE='dr' THEN SUM(NVL(AMOUNT,0)) END,0) AS debit, \n" +
+            "                                    NVL(CASE WHEN TRANSACTION_TYPE = 'cr' THEN SUM(NVL(AMOUNT,0)) END,0) AS credit \n" +
+            "                                    FROM CA_LEDGERS cal  \n" +
+            "                                    LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID \n" +
+            "                                    JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID \n" +
+            "                                    JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID \n" +
+            "             WHERE cat.alias = :caType AND (t.transaction_date IS NULL OR t.transaction_date BETWEEN to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))\n" +
+            "                                   GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, ca.code, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p \n" +
+            "             LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID \n" +
+            "                                    LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID \n" +
+            "                                   GROUP BY g.TITLE,g1.TITLE, g.code,g1.code, p.code, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type \n" +
+            "                                   ORDER BY alias asc",
     nativeQuery = true)
     List<ReportData> getLedgerWiseTransactions(@Param("caType") String caType,@Param("yearStart") String yearStart,
                                                @Param("yearEnd") String yearEnd);
 
 
-    @Query(value = "SELECT p.alias, (g1.CODE || ' ' || g1.TITLE) AS primaryGroup, (g.CODE || ' ' || g.TITLE) AS subGroup," +
+    @Query(value = "SELECT p.alias, CASE WHEN g1.TITLE IS NULL THEN g.TITLE ELSE (g1.CODE || ' ' || g1.TITLE) END AS primaryGroup, (g.CODE || ' ' || g.TITLE) AS subGroup," +
             " (p.CODE || ' ' || p.TITLE) AS ledgerAcc, p.transaction_Type AS transType, p.id, " +
             " NVL(p.OPENING_BALANCE,0) AS openingBalance,NVL(p.OPENING_CREDIT_BALANCE,0) AS openingCreditBalance, " +
             " SUM(DEBIT) AS DEBIT, SUM(CREDIT) AS credit FROM ( " +
