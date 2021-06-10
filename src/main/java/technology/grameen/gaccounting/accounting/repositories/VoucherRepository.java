@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface VoucherRepository extends JpaRepository<Voucher,Long> {
 
     @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.voucherType vt",
-    countQuery = "SELECT count(v) FROM Voucher v")
+    countQuery = "SELECT count(v) FROM Voucher v JOIN v.voucherType vt")
     Page<VoucherList> findAllVouchers(Pageable pageable);
 
     @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.transactions t WHERE v.id =:id")
