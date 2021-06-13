@@ -41,10 +41,16 @@ public class CaServiceImpl implements CaService{
 
     @Override
     public Page<LedgerAccountList> getLedgerAccounts(String type, String title, String code, Pageable pageable) {
-        if(type.isEmpty() && title.isEmpty() && code.isEmpty()){
-            return  caRepository.findAllLedgerAccounts(pageable);
+        if(type.isEmpty() && !title.isEmpty() && code.isEmpty()){
+            return  caRepository.findAllLedgerAccountsByTitle(title,pageable);
         }
-        return caRepository.findAllLedgerAccounts(type,title,code, pageable);
+        if(!type.isEmpty() && title.isEmpty() && code.isEmpty()){
+            return  caRepository.findAllLedgerAccountsByType(type,pageable);
+        }
+        if(type.isEmpty() && title.isEmpty() && !code.isEmpty()){
+            return  caRepository.findAllLedgerAccountsByCode(code,pageable);
+        }
+        return caRepository.findAllLedgerAccounts(pageable);
     }
 
     @Override

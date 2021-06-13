@@ -8,6 +8,7 @@ public interface ChartAccountList {
     String getTitle();
     Long getParentId();
     String getParent();
+    String getParentCode();
     String getCaCode();
     Integer getIsLedger();
     Integer getCaLevel();

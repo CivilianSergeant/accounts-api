@@ -54,15 +54,34 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             " WHERE cas.is_ledger=1 " +
-            " AND ((:type IS NULL OR upper(cat.name) LIKE upper(:type)) OR (:title IS NULL OR upper(cas.title) LIKE upper(:title)) OR (:code IS NULL OR upper(cas.code) LIKE upper(:code))) " +
+            " AND upper(cas.title) LIKE upper('%'||:title||'%') " +
             "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
-    Page<LedgerAccountList> findAllLedgerAccounts(@Param("type") String type,
-                                                  @Param("title") String title,
-                                                  @Param("code") String code,
-                                                  Pageable pageable);
+    Page<LedgerAccountList> findAllLedgerAccountsByTitle(@Param("title") String title, Pageable pageable);
+
+    @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
+            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
+            "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
+            "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
+            "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
+            " WHERE cas.is_ledger=1 " +
+            " AND upper(cat.name) LIKE upper('%'||:type||'%') " +
+            "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
+    Page<LedgerAccountList> findAllLedgerAccountsByType(@Param("type") String title, Pageable pageable);
+
+    @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
+            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
+            "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
+            "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
+            "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
+            " WHERE cas.is_ledger=1 " +
+            " AND upper(cas.code) LIKE upper('%'||:code||'%') " +
+            "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
+    Page<LedgerAccountList> findAllLedgerAccountsByCode(@Param("code") String code, Pageable pageable);
 
     @Query(value = "SELECT cas.id, cas.ca_level as caLevel, cat.id as caTypeId, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "parentCas.title as parent, parentCas.code as parentCode, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             " WHERE cas.is_ledger=0 " +
