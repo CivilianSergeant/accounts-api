@@ -20,14 +20,14 @@ import java.util.Optional;
 public interface CaRepository extends JpaRepository<ChartAccount,Long> {
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "parentCas.title as parent, parentCas.id as parentId,parentCas.code as parentCode, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
     List<ChartAccountList> findAllChartAccounts();
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
             "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
@@ -38,7 +38,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
 
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
             "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
@@ -48,7 +48,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     Page<LedgerAccountList> findAllLedgerAccounts(Pageable pageable);
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code  as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
             "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
@@ -59,7 +59,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     Page<LedgerAccountList> findAllLedgerAccountsByTitle(@Param("title") String title, Pageable pageable);
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code  as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
             "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
@@ -70,7 +70,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     Page<LedgerAccountList> findAllLedgerAccountsByType(@Param("type") String title, Pageable pageable);
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
             "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
@@ -90,7 +90,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
 
 
     @Query(value = "SELECT cas.id, cas.ca_level as caLevel, cat.id as caTypeId, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             " WHERE cas.is_ledger=0 " +
@@ -98,7 +98,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     Page<ChartAccountList> findAllGroups(Pageable pageable);
 
     @Query(value = "SELECT cas.id, cas.ca_level as caLevel, cat.id as caTypeId, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
-            "parentCas.title as parent, parentCas.id as parentId, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger FROM CA_TYPES cat " +
             "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
             " LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             " WHERE cas.is_ledger=0 " +
