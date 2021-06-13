@@ -1,5 +1,7 @@
 package technology.grameen.gaccounting.services.chartaccount;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
@@ -38,8 +40,24 @@ public class CaServiceImpl implements CaService{
     }
 
     @Override
+    public Page<LedgerAccountList> getLedgerAccounts(String type, String title, String code, Pageable pageable) {
+        if(type.isEmpty() && title.isEmpty() && code.isEmpty()){
+            return  caRepository.findAllLedgerAccounts(pageable);
+        }
+        return caRepository.findAllLedgerAccounts(type,title,code, pageable);
+    }
+
+    @Override
     public List<ChartAccountList> getGroupAccounts() {
         return caRepository.findAllGroupAccounts();
+    }
+
+    @Override
+    public List<ChartAccountList> getAllGroupAccounts(String title) {
+        if(title.isEmpty()){
+            return caRepository.findAllGroupAccounts();
+        }
+        return caRepository.findAllGroupsByTitle(title);
     }
 
     @Override

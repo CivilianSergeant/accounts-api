@@ -1,5 +1,8 @@
 package technology.grameen.gaccounting.resources;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1/cas")
 public class CaController {
 
+    private static final Integer PAGE_SIZE = 10;
     CaService caService;
 
     CaController(CaService caService){
@@ -44,11 +48,50 @@ public class CaController {
         ), HttpStatus.OK);
     }
 
+    @GetMapping("/ledgers/list")
+    public ResponseEntity<IResponse> getLedgerAccounts(
+                                                       @RequestParam(value = "type") Optional<String> type,
+                                                       @RequestParam(value = "title") Optional<String> title,
+                                                       @RequestParam(value = "code") Optional<String> code,
+                                                       @RequestParam(value = "page") Optional<Integer> page,
+                                                       @RequestParam(value = "size") Optional<Integer> size,
+                                                       @RequestParam(value = "sortBy") Optional<String> sortBy,
+                                                       @RequestParam(value = "sortDesc") Optional<Boolean> sortDesc){
+
+        Pageable pageable = null;
+        try {
+            page.orElseThrow(()->new Exception("Query param page missing"));
+            size.orElseThrow(()->new Exception("Query param size missing"));
+            sortBy.orElseThrow(()->new Exception("Query param sortBy missing"));
+            sortDesc.orElseThrow(()->new Exception("Query param sortDesc missing [true or false]"));
+
+            String _sortBy = sortBy.orElse(null);
+            //_sortBy = (_sortBy.contains("active")) ? "isActive":_sortBy;
+
+            Sort sort = null;
+            if(!_sortBy.isEmpty()) {
+                sort =   (sortDesc.orElse(false)) ? Sort.by(_sortBy).descending()
+                        : Sort.by(_sortBy).ascending();
+            }
+            pageable = (sort!=null)? PageRequest.of(page.orElse(0),size.orElse(PAGE_SIZE),sort)
+                    : PageRequest.of(page.orElse(0),size.orElse(PAGE_SIZE));
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY,ex.getMessage()),
+                    HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                caService.getLedgerAccounts(type.get(), title.get(), code.get(), pageable)
+        ), HttpStatus.OK);
+    }
+
     @GetMapping("/groups")
-    public ResponseEntity<IResponse> getGroupAccounts(){
+    public ResponseEntity<IResponse> getGroupAccounts(@RequestParam("title") String title){
         return new ResponseEntity<>(new EntityCollectionResponse<>(
                 HttpStatus.OK.value(),
-                caService.getGroupAccounts()
+                caService.getAllGroupAccounts(title)
         ), HttpStatus.OK);
     }
 

@@ -1,5 +1,7 @@
 package technology.grameen.gaccounting.services.chartaccount;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.*;
@@ -12,7 +14,10 @@ public interface CaService {
 
     List<ChartAccountList> getChartAccounts();
     List<LedgerAccountList> getLedgerAccounts();
+    Page<LedgerAccountList> getLedgerAccounts(String type, String title, String code, Pageable pageable);
     List<ChartAccountList> getGroupAccounts();
+
+    List<ChartAccountList> getAllGroupAccounts(String title);
 
     Optional<GroupDetail> getGroupDetail(Long id);
     Optional<LedgerDetail> getLedgerDetail(Long id);
