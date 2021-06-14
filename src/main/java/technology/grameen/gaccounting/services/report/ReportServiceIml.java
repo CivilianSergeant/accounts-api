@@ -215,10 +215,10 @@ public class ReportServiceIml implements ReportService {
         primaryGroup.setCreditAmount(primaryGroup.getCreditAmount().add(t.getCredit()));
 
         if(isNew) {
-//            subGroup.setOpeningBalance(subGroup.getOpeningBalance().add(t.getOpeningBalance()));
+            subGroup.setOpeningBalance(subGroup.getOpeningBalance().add(t.getOpeningBalance()));
             subGroup.setOpeningCreditBalance(subGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
 
-//            primaryGroup.setOpeningBalance(primaryGroup.getOpeningBalance().add(t.getOpeningBalance()));
+            primaryGroup.setOpeningBalance(primaryGroup.getOpeningBalance().add(t.getOpeningBalance()));
             primaryGroup.setOpeningCreditBalance(primaryGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
             subGroup.getLedgerAccounts().add(ledgerAccount);
         }
