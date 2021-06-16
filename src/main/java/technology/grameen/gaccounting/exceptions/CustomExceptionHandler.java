@@ -62,7 +62,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         errors.add(ex.getMessage());
 
         ExceptionResponse apiError =
-                new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage(), errors);
+                new ExceptionResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), errors);
         return new ResponseEntity<Object>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }

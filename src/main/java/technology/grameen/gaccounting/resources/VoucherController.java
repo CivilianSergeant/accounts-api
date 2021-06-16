@@ -8,12 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.requests.AutoVoucherRequest;
 import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.ExceptionResponse;
 import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.voucher.VoucherService;
+import technology.grameen.gaccounting.services.voucher.auto.AutoVoucherService;
 
-import javax.servlet.http.HttpServletRequest;
+
 import javax.validation.Valid;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,9 +27,12 @@ public class VoucherController {
     private static final Integer PAGE_SIZE=10;
 
     VoucherService voucherService;
+    AutoVoucherService autoVoucherService;
 
-    VoucherController(VoucherService voucherService){
+    VoucherController(VoucherService voucherService,
+                      AutoVoucherService autoVoucherService){
         this.voucherService = voucherService;
+        this.autoVoucherService = autoVoucherService;
     }
 
     @GetMapping("/list")
@@ -84,6 +89,16 @@ public class VoucherController {
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
                 voucherService.getVoucherDetail(id)
+        ),HttpStatus.OK);
+    }
+
+
+    @PostMapping("/auto")
+    public ResponseEntity<IResponse> addAutoVoucher(@RequestBody AutoVoucherRequest req) throws CustomException {
+        autoVoucherService.setVoucherService(voucherService);
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                autoVoucherService.saveAutoVoucher(req)
         ),HttpStatus.OK);
     }
 
