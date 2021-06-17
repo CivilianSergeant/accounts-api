@@ -1,5 +1,7 @@
 package technology.grameen.gaccounting.services.voucher.auto;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import technology.grameen.gaccounting.accounting.entity.AutoVoucherMap;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.exceptions.CustomException;
@@ -16,6 +18,8 @@ public interface AutoVoucherService {
     Optional<AutoVoucherMapDetail> getByAlias(String module,String alias);
 
     Voucher saveAutoVoucher(AutoVoucherRequest request) throws CustomException;
+
+    Page<AutoVoucherMapDetail> getMappings(Pageable pageable);
 
     void setVoucherService(VoucherService voucherService);
 }

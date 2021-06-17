@@ -14,6 +14,7 @@ public interface AutoVoucherMapDetail {
 
     Long getId();
     String getName();
+    String getModuleName();
 
     ChartAccount getCrHeader();
 

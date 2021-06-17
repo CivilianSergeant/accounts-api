@@ -1,5 +1,7 @@
 package technology.grameen.gaccounting.services.voucher.auto;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import technology.grameen.gaccounting.accounting.entity.*;
 import technology.grameen.gaccounting.accounting.repositories.AutoVoucherRepository;
@@ -115,5 +117,10 @@ public class AutoVoucherImpl implements AutoVoucherService {
         voucherType.setId(detail.getVoucherType().getId());
         voucherType.setName(detail.getVoucherType().getName());
         return voucherType;
+    }
+
+    @Override
+    public Page<AutoVoucherMapDetail> getMappings(Pageable pageable) {
+        return autoVoucherRepository.findAllMappings(pageable);
     }
 }
