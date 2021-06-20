@@ -10,6 +10,7 @@ import technology.grameen.gaccounting.projection.AutoVoucherMapDetail;
 import technology.grameen.gaccounting.requests.AutoVoucherRequest;
 import technology.grameen.gaccounting.services.voucher.VoucherService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,12 +35,28 @@ public class AutoVoucherImpl implements AutoVoucherService {
             throw new CustomException("Alias is required");
         }
 
+        if(voucherMap.getModuleName().isEmpty()){
+            throw new CustomException("Module Name is required");
+        }
+
+        Optional<AutoVoucherMapDetail> autoVoucherMap = autoVoucherRepository
+                .findByAlias(voucherMap.getAlias());
+
+        if(autoVoucherMap.isPresent()){
+            throw new CustomException("Alias ["+voucherMap.getAlias()+"] already exist");
+        }
+
         return this.autoVoucherRepository.save(voucherMap);
     }
 
     @Override
     public Optional<AutoVoucherMapDetail> getByAlias(String module,String alias) {
         return autoVoucherRepository.findByModuleNameAndAlias(module,alias);
+    }
+
+    @Override
+    public List<AutoVoucherMapDetail> getByModule(String module) {
+        return autoVoucherRepository.findByModuleName(module);
     }
 
     @Override

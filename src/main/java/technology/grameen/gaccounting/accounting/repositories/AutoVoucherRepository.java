@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.AutoVoucherMap;
 import technology.grameen.gaccounting.projection.AutoVoucherMapDetail;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,6 +25,26 @@ public interface AutoVoucherRepository extends JpaRepository<AutoVoucherMap,Long
             " WHERE av.moduleName = :moduleName AND av.alias = :alias")
     Optional<AutoVoucherMapDetail> findByModuleNameAndAlias(@Param("moduleName") String module,
                                                             @Param("alias") String alias);
+
+    @Query(value = "SELECT av FROM AutoVoucherMap av JOIN FETCH av.crHeader crH " +
+            " JOIN FETCH av.voucherType vt" +
+            " JOIN FETCH av.drHeader drH" +
+            " LEFT JOIN FETCH drH.chartAccountGroup drCag " +
+            " LEFT JOIN FETCH drH.chartAccountLedger drCal " +
+            " LEFT JOIN FETCH crH.chartAccountGroup cag " +
+            " LEFT JOIN FETCH crH.chartAccountLedger cal " +
+            " WHERE av.alias = :alias")
+    Optional<AutoVoucherMapDetail> findByAlias(@Param("alias") String alias);
+
+    @Query(value = "SELECT av FROM AutoVoucherMap av JOIN FETCH av.crHeader crH " +
+            " JOIN FETCH av.voucherType vt" +
+            " JOIN FETCH av.drHeader drH" +
+            " LEFT JOIN FETCH drH.chartAccountGroup drCag " +
+            " LEFT JOIN FETCH drH.chartAccountLedger drCal " +
+            " LEFT JOIN FETCH crH.chartAccountGroup cag " +
+            " LEFT JOIN FETCH crH.chartAccountLedger cal " +
+            " WHERE av.moduleName = :moduleName")
+    List<AutoVoucherMapDetail> findByModuleName(@Param("moduleName") String moduleName);
 
     @Query(value = "SELECT av FROM AutoVoucherMap av JOIN FETCH av.crHeader crH " +
             " JOIN FETCH av.voucherType vt" +

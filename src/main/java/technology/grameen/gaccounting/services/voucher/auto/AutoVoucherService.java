@@ -9,6 +9,7 @@ import technology.grameen.gaccounting.projection.AutoVoucherMapDetail;
 import technology.grameen.gaccounting.requests.AutoVoucherRequest;
 import technology.grameen.gaccounting.services.voucher.VoucherService;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AutoVoucherService {
@@ -16,6 +17,7 @@ public interface AutoVoucherService {
     AutoVoucherMap addVoucherMap(AutoVoucherMap voucherMap) throws CustomException;
 
     Optional<AutoVoucherMapDetail> getByAlias(String module,String alias);
+    List<AutoVoucherMapDetail> getByModule(String module);
 
     Voucher saveAutoVoucher(AutoVoucherRequest request) throws CustomException;
 

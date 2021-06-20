@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import technology.grameen.gaccounting.accounting.entity.AutoVoucherMap;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.responses.EntityCollectionResponse;
 import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.ExceptionResponse;
 import technology.grameen.gaccounting.responses.IResponse;
@@ -32,6 +33,14 @@ public class AutoVoucherController {
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
                 autoVoucherService.addVoucherMap(voucherMap)
+        ), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/by-module/{module}")
+    public ResponseEntity<IResponse> getMapByModule(@PathVariable("module") String module){
+        return new ResponseEntity<>(new EntityCollectionResponse<>(
+                HttpStatus.OK.value(),
+                autoVoucherService.getByModule(module)
         ), HttpStatus.OK);
     }
 
