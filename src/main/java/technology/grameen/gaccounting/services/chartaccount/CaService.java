@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import technology.grameen.gaccounting.accounting.entity.ChartAccount;
 import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.*;
+import technology.grameen.gaccounting.services.imports.ImportServiceResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,7 @@ public interface CaService {
     Optional<OpeningBalanceDiff> getOpeningBalanceDiff();
 
     ChartAccount addChartAccount(ChartAccount chartAccount) throws CustomException;
+
+
+    Optional<ChartAccount> getChartAccountByParentCode(String parentGroupCode);
 }

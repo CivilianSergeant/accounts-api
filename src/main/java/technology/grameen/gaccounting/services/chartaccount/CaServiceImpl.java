@@ -72,7 +72,7 @@ public class CaServiceImpl implements CaService{
 
         Optional<ChartAccount> ca = caRepository.findByCode(chartAccount.getCode());
         if(ca!=null && ca.isPresent() && chartAccount.getId()==null){
-            throw new CustomException("Code already exist");
+            throw new CustomException("Code ["+chartAccount.getCode()+"] already exist");
         }
 
         if(chartAccount.getChartAccountType()==null ||
@@ -116,5 +116,10 @@ public class CaServiceImpl implements CaService{
     @Override
     public Optional<OpeningBalanceDiff> getOpeningBalanceDiff() {
         return caLedgerService.getOpeningBalanceDifference();
+    }
+
+    @Override
+    public Optional<ChartAccount> getChartAccountByParentCode(String parentGroupCode) {
+        return caRepository.findByCode(parentGroupCode);
     }
 }

@@ -44,7 +44,12 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
             "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
             "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
             " WHERE cas.is_ledger=1 " +
-            "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
+            "ORDER BY cat.code ASC, cas.code ASC",
+            countQuery ="select count(*) FROM CA_TYPES cat " +
+                    " JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id "+
+                    " LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id "+
+                    " LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
+                    " WHERE cas.is_ledger=1 ", nativeQuery = true)
     Page<LedgerAccountList> findAllLedgerAccounts(Pageable pageable);
 
     @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
