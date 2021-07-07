@@ -59,6 +59,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                                   GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, ca.code, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p \n" +
             "             LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID \n" +
             "                                    LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID \n" +
+            " WHERE p.transaction_Type IS NOT NULL "+
             "                                   GROUP BY g.TITLE,g1.TITLE, g.code,g1.code, p.code, p.TITLE, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type \n" +
             "                                   ORDER BY alias asc",
     nativeQuery = true)
@@ -80,6 +81,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, ca.CODE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p " +
             " LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID " +
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID " +
+            " WHERE p.transaction_Type IS NOT NULL "+
             "                        GROUP BY g.TITLE, g.CODE,g1.TITLE,g1.CODE, p.TITLE,p.CODE, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type " +
             "                        ORDER BY alias asc",
             nativeQuery = true)
