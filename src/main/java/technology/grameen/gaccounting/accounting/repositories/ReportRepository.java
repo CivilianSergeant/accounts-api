@@ -13,7 +13,7 @@ import java.util.List;
 public interface ReportRepository extends JpaRepository<Voucher, Long> {
 
     @Query(value = "SELECT p.alias, CASE WHEN g1.TITLE IS NULL THEN g.TITLE ELSE (g1.CODE || ' ' || g1.TITLE) END AS primaryGroup,(g.code || ' ' || g.TITLE) AS subGroup, (p.code || ' ' || p.TITLE) AS ledgerAcc, p.transaction_Type AS transType, p.id,\n" +
-            "\tp.OPENING_BALANCE AS openingBalance,  NVL(p.OPENING_CREDIT_BALANCE,0) openingCreditBalance,\n" +
+            "\t NVL(p.OPENING_BALANCE,0) AS openingBalance,  NVL(p.OPENING_CREDIT_BALANCE,0) openingCreditBalance,\n" +
             "            CASE \n" +
             "            WHEN p.alias = 'asset' THEN \n" +
             "            \t(p.OPENING_BALANCE+(SUM(DEBIT)-SUM(CREDIT))) \n" +
@@ -40,6 +40,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        GROUP BY t.TRANSACTION_DATE, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, ca.CODE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID\n" +
+            " WHERE p.transaction_Type IS NOT NULL "+
             "                        GROUP BY g.TITLE,g.code,g1.code,g1.TITLE, p.TITLE, p.code, p.ID, p.alias,p.OPENING_BALANCE,p.OPENING_CREDIT_BALANCE,p.transaction_Type\n" +
             "                        ORDER BY alias asc",nativeQuery = true)
     List<ReportData> getTrialBalance(@Param("yearStart") String yearStart, @Param("yearEnd") String yearEnd);

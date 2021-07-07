@@ -181,6 +181,7 @@ public class ReportServiceIml implements ReportService {
                     root.add(t.getSubGroup());
                     subGroup = new SubGroup(t.getSubGroup());
                     primaryGroup.getSubGroups().add(subGroup);
+                    this.addLedgerAccount(t,true);
                 }else{
 
                    this.addLedgerAccount(t,true);
@@ -215,15 +216,15 @@ public class ReportServiceIml implements ReportService {
         primaryGroup.setCreditAmount(primaryGroup.getCreditAmount().add(t.getCredit()));
 
         if(isNew) {
-            if(subGroup != null && subGroup.getOpeningBalance() != null) {
+//            if(subGroup != null && subGroup.getOpeningBalance() != null) {
                 subGroup.setOpeningBalance(subGroup.getOpeningBalance().add(t.getOpeningBalance()));
                 subGroup.setOpeningCreditBalance(subGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
-            if(primaryGroup !=null && primaryGroup.getOpeningBalance() != null) {
+//            if(primaryGroup !=null && primaryGroup.getOpeningBalance() != null) {
                 primaryGroup.setOpeningBalance(primaryGroup.getOpeningBalance().add(t.getOpeningBalance()));
                 primaryGroup.setOpeningCreditBalance(primaryGroup.getOpeningCreditBalance().add(t.getOpeningCreditBalance()));
-            }
+//            }
             subGroup.getLedgerAccounts().add(ledgerAccount);
-            }
+//            }
         }
     }
 }
