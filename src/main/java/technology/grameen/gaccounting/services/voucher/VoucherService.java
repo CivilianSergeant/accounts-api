@@ -7,6 +7,7 @@ import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.VoucherDetail;
 import technology.grameen.gaccounting.projection.VoucherList;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface VoucherService {
@@ -17,4 +18,6 @@ public interface VoucherService {
     Voucher addVoucher(Voucher voucher) throws CustomException;
 
     Optional<VoucherDetail> getVoucherDetail(Long id);
+
+    List<VoucherDetail> isVoucherNoUnique(String number);
 }

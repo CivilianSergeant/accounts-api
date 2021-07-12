@@ -36,7 +36,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID\n" +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID  \n" +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID  \n" +
-            "\t\t\t              WHERE (t.TRANSACTION_DATE IS NULL OR t.TRANSACTION_DATE BETWEEN TO_DATE(:yearStart,'YYYY-MM-DD') AND TO_DATE(:yearEnd,'yyyy-mm-dd') )\n" +
+            "\t\t\t              WHERE (t.TRANSACTION_DATE BETWEEN TO_DATE(:yearStart,'YYYY-MM-DD') AND TO_DATE(:yearEnd,'yyyy-mm-dd') )\n" +
             "                        GROUP BY t.TRANSACTION_DATE, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, ca.CODE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID\n" +
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID\n" +
@@ -55,7 +55,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                                    LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID \n" +
             "                                    JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID \n" +
             "                                    JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID \n" +
-            "             WHERE cat.alias = :caType AND (t.transaction_date IS NULL OR t.transaction_date BETWEEN to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))\n" +
+            "             WHERE cat.alias = :caType AND (t.transaction_date BETWEEN to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))\n" +
             "                                   GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, ca.code, TITLE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p \n" +
             "             LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID \n" +
             "                                    LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID \n" +
@@ -77,7 +77,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "                        LEFT JOIN TRANSACTIONS t ON t.CHART_ACCOUNT_ID = cal.CHART_ACCOUNT_ID " +
             "                        JOIN CHART_ACCOUNTS ca ON cal.CHART_ACCOUNT_ID = ca.ID " +
             "                        JOIN CA_TYPES cat ON cat.ID = ca.CHART_ACCOUNT_TYPE_ID " +
-            " WHERE cat.alias IN :caTypes AND (t.transaction_date IS NULL OR t.transaction_date between to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))" +
+            " WHERE cat.alias IN :caTypes AND (t.transaction_date between to_date(:yearStart,'yyyy-mm-dd') AND to_date(:yearEnd,'yyyy-mm-dd'))" +
             "                        GROUP BY t.transaction_date, t.TRANSACTION_TYPE, ca.ID, ca.PARENT_ID, TITLE, ca.CODE, TRANSACTION_TYPE, cat.ALIAS,cal.OPENING_BALANCE,cal.OPENING_CREDIT_BALANCE) p " +
             " LEFT JOIN CHART_ACCOUNTS g ON g.ID = p.parent_ID " +
             "                        LEFT JOIN CHART_ACCOUNTS g1 ON g.PARENT_ID = g1.ID " +

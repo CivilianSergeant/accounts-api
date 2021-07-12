@@ -48,6 +48,14 @@ public class CaController {
         ), HttpStatus.OK);
     }
 
+    @GetMapping("/ledgers/{keyword}")
+    public ResponseEntity<IResponse> getLedgerAccounts(@PathVariable("keyword") String keyword){
+        return new ResponseEntity<>(new EntityCollectionResponse<>(
+                HttpStatus.OK.value(),
+                caService.getLedgerAccounts(keyword)
+        ), HttpStatus.OK);
+    }
+
     @GetMapping("/ledgers/list")
     public ResponseEntity<IResponse> getLedgerAccounts(
                                                        @RequestParam(value = "type") Optional<String> type,

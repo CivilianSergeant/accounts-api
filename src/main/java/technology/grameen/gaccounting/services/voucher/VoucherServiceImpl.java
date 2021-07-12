@@ -11,6 +11,7 @@ import technology.grameen.gaccounting.exceptions.CustomException;
 import technology.grameen.gaccounting.projection.VoucherDetail;
 import technology.grameen.gaccounting.projection.VoucherList;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,7 @@ public class VoucherServiceImpl implements  VoucherService{
         if(voucherSaved != null && voucherSaved.getId() > 0){
             voucherSaved.getTransactions().stream().map(t->{
                 t.setVoucher(voucherSaved);
+                t.setTransactionDate(voucherSaved.getVoucherDate());
                 return t;
             }).collect(Collectors.toSet());
 
@@ -64,5 +66,10 @@ public class VoucherServiceImpl implements  VoucherService{
     @Override
     public Optional<VoucherDetail> getVoucherDetail(Long id) {
         return voucherRepository.findVoucherById(id);
+    }
+
+    @Override
+    public List<VoucherDetail> isVoucherNoUnique(String number) {
+        return voucherRepository.findByVoucherNo(number);
     }
 }

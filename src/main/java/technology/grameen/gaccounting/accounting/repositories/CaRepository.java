@@ -129,6 +129,13 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
             "JOIN FETCH ca.chartAccountType cat WHERE ca.id=:id")
     Optional<LedgerDetail> findLedgerById(@Param("id") Long id);
 
-
-
+    @Query(value = "SELECT cas.id, cat.name as typeName,cat.code as ctCode,cas.title,cas.code as caCode, " +
+            "parentCas.title as parent, parentCas.id as parentId, parentCas.code as parentCode, cas.is_ledger as IsLedger,cal.contact_address as contactAddress,cal.contact_name as contactName, " +
+            "cal.contact_email as contactEmail,cal.contact_phone as contactPhone FROM CA_TYPES cat " +
+            "JOIN CHART_ACCOUNTS cas ON cas.CHART_ACCOUNT_TYPE_ID = cat.id " +
+            "LEFT JOIN CA_LEDGERS cal ON cal.CHART_ACCOUNT_ID = cas.id " +
+            "LEFT JOIN CHART_ACCOUNTS parentCas ON cas.PARENT_ID = parentCas.id " +
+            " WHERE cas.is_ledger=1 AND (cas.code LIKE :keyword||'%' OR cas.title LIKE :keyword||'%') " +
+            "ORDER BY cat.code ASC, cas.code ASC",nativeQuery = true)
+    List<LedgerAccountList> findByCodeOrTitleContainingIgnoreCase(String keyword);
 }

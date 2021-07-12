@@ -10,6 +10,7 @@ import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.projection.VoucherDetail;
 import technology.grameen.gaccounting.projection.VoucherList;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -21,4 +22,7 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
 
     @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.transactions t WHERE v.id =:id")
     Optional<VoucherDetail> findVoucherById(@Param("id") Long id);
+
+    @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.voucherType vt WHERE v.voucherNo =:voucherNo")
+    List<VoucherDetail> findByVoucherNo(@Param("voucherNo") String number);
 }

@@ -29,4 +29,6 @@ public interface CaService {
 
 
     Optional<ChartAccount> getChartAccountByParentCode(String parentGroupCode);
+
+    List<LedgerAccountList> getLedgerAccounts(String keyword);
 }

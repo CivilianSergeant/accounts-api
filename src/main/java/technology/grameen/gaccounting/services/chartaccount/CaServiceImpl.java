@@ -122,4 +122,9 @@ public class CaServiceImpl implements CaService{
     public Optional<ChartAccount> getChartAccountByParentCode(String parentGroupCode) {
         return caRepository.findByCode(parentGroupCode);
     }
+
+    @Override
+    public List<LedgerAccountList> getLedgerAccounts(String keyword) {
+        return caRepository.findByCodeOrTitleContainingIgnoreCase(keyword);
+    }
 }

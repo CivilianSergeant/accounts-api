@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.exceptions.CustomException;
+import technology.grameen.gaccounting.projection.VoucherDetail;
 import technology.grameen.gaccounting.requests.AutoVoucherRequest;
 import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.ExceptionResponse;
@@ -17,6 +18,7 @@ import technology.grameen.gaccounting.services.voucher.auto.AutoVoucherService;
 
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -100,6 +102,16 @@ public class VoucherController {
                 HttpStatus.OK.value(),
                 autoVoucherService.saveAutoVoucher(req)
         ),HttpStatus.OK);
+    }
+
+    @GetMapping("/by-number/{number}")
+    public ResponseEntity<IResponse> isVoucherNoAvailable(@PathVariable("number") String number){
+        List<VoucherDetail> voucherExist = voucherService.isVoucherNoUnique(number);
+
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                voucherExist.size()
+        ), HttpStatus.OK);
     }
 
 
