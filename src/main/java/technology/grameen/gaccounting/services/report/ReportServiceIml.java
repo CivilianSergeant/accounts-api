@@ -232,10 +232,10 @@ public class ReportServiceIml implements ReportService {
     }
 
     @Override
-    public Map<String,Object> getLedgerStatement(String code) {
+    public Map<String,Object> getLedgerStatement(String code, LocalDateTime fromDate, LocalDateTime toDate) {
         Map<String,Object> map = new HashMap<>();
         map.put("ledger",caRepository.findLedgerByCode(code));
-        map.put("ledgerStatement",reportRepository.getLedgerStatement(code));
+        map.put("ledgerStatement",reportRepository.getLedgerStatement(code,fromDate,toDate));
         return map;
     }
 }

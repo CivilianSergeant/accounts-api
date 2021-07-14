@@ -2,14 +2,13 @@ package technology.grameen.gaccounting.resources;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import technology.grameen.gaccounting.responses.EntityCollectionResponse;
 import technology.grameen.gaccounting.responses.EntityResponse;
 import technology.grameen.gaccounting.responses.IResponse;
 import technology.grameen.gaccounting.services.report.ReportService;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/report")
@@ -46,10 +45,12 @@ public class ReportController {
     }
 
     @GetMapping("/ledger-statement/{code}")
-    public ResponseEntity<IResponse> getLedgerStatement(@PathVariable("code") String code){
+    public ResponseEntity<IResponse> getLedgerStatement(@PathVariable("code") String code,
+                                                        @RequestParam String fromDate,
+                                                        @RequestParam String toDate){
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
-                reportService.getLedgerStatement(code)
+                reportService.getLedgerStatement(code,LocalDateTime.parse(fromDate),LocalDateTime.parse(toDate))
         ), HttpStatus.OK);
     }
 }
