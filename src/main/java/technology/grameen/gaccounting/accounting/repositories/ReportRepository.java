@@ -111,7 +111,7 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "SELECT v.id FROM TRANSACTIONS t  " +
             "JOIN CHART_ACCOUNTS ca ON ca.ID = t.CHART_ACCOUNT_ID " +
             "JOIN VOUCHERS v ON v.id = t.VOUCHER_ID " +
-            "WHERE ca.CODE = :code ) AND ca2.CODE <> :code",nativeQuery = true)
+            "WHERE ca.CODE = :code ) AND ca2.CODE <> :code ORDER BY t.transaction_date ASC",nativeQuery = true)
     List<LedgerStatement> getLedgerStatement(@Param("code") String code);
 
 }
