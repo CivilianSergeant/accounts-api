@@ -9,4 +9,6 @@ public interface ReportService {
 
     Map<String, Object> getIncomeStatement();
     Map<String, Object> getBalanceSheet();
+
+    Map<String,Object> getLedgerStatement(String code);
 }

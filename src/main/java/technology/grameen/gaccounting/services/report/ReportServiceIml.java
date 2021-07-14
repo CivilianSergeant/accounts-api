@@ -2,6 +2,7 @@ package technology.grameen.gaccounting.services.report;
 
 import org.springframework.stereotype.Service;
 import technology.grameen.gaccounting.accounting.entity.GeneralSetting;
+import technology.grameen.gaccounting.accounting.repositories.CaRepository;
 import technology.grameen.gaccounting.accounting.repositories.GeneralSettingRepository;
 import technology.grameen.gaccounting.accounting.repositories.ReportRepository;
 import technology.grameen.gaccounting.projection.ReportData;
@@ -16,6 +17,7 @@ import java.util.*;
 public class ReportServiceIml implements ReportService {
 
     private ReportRepository reportRepository;
+    private CaRepository caRepository;
 
     private CaType caType;
     private PrimaryGroup primaryGroup;
@@ -28,9 +30,10 @@ public class ReportServiceIml implements ReportService {
     Double totalDebitAmount = 0.0;
 
     ReportServiceIml(ReportRepository reportRepository,
-                     UtilService utilService){
+                     UtilService utilService,CaRepository caRepository){
         this.reportRepository = reportRepository;
         this.utilService = utilService;
+        this.caRepository = caRepository;
 
     }
 
@@ -226,5 +229,13 @@ public class ReportServiceIml implements ReportService {
             subGroup.getLedgerAccounts().add(ledgerAccount);
 //            }
         }
+    }
+
+    @Override
+    public Map<String,Object> getLedgerStatement(String code) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("ledger",caRepository.findLedgerByCode(code));
+        map.put("ledgerStatement",reportRepository.getLedgerStatement(code));
+        return map;
     }
 }

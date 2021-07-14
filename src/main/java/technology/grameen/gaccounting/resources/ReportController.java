@@ -3,6 +3,7 @@ package technology.grameen.gaccounting.resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import technology.grameen.gaccounting.responses.EntityCollectionResponse;
@@ -41,6 +42,14 @@ public class ReportController {
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
                 reportService.getBalanceSheet()
+        ), HttpStatus.OK);
+    }
+
+    @GetMapping("/ledger-statement/{code}")
+    public ResponseEntity<IResponse> getLedgerStatement(@PathVariable("code") String code){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                reportService.getLedgerStatement(code)
         ), HttpStatus.OK);
     }
 }

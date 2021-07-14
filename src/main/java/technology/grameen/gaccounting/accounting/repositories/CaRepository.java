@@ -13,6 +13,7 @@ import technology.grameen.gaccounting.projection.GroupDetail;
 import technology.grameen.gaccounting.projection.LedgerAccountList;
 import technology.grameen.gaccounting.projection.LedgerDetail;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,8 +113,28 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     List<ChartAccountList> findAllGroupsByTitle(@Param("title") String title);
 
 
-
     Optional<ChartAccount> findByCode(String code);
+
+    interface ChartAccountType{
+        Integer getId();
+        String getAlias();
+    }
+    interface ChartAccountLedger{
+        BigDecimal getOpeningBalance();
+        BigDecimal getOpeningCreditBalance();
+    }
+    interface LedgerInfo{
+        Long getId();
+        String getTitle();
+        Boolean getLedger();
+        ChartAccountType getChartAccountType();
+        ChartAccountLedger getChartAccountLedger();
+    }
+    @Query(value = "SELECT ca FROM ChartAccount ca JOIN FETCH ca.chartAccountType cat " +
+            " JOIN FETCH ca.chartAccountLedger cal " +
+            "WHERE ca.code = :code")
+    Optional<LedgerInfo> findLedgerByCode(@Param("code") String code);
+
 
     @Query(value = "SELECT ca FROM ChartAccount ca " +
             "LEFT JOIN FETCH ca.parent pa " +

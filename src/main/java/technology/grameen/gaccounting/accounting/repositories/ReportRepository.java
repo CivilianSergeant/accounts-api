@@ -1,5 +1,6 @@
 package technology.grameen.gaccounting.accounting.repositories;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
 import technology.grameen.gaccounting.projection.ReportData;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -90,5 +93,25 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
                                                       @Param("yearEnd") String yearEnd);
 
 
+    interface LedgerStatement{
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDateTime getTransactionDate();
+        String getTransactionType();
+        String getAccountTitle();
+        String getVoucherType();
+        String getVoucherNo();
+        BigDecimal getAmount();
+    }
+    @Query(value = "SELECT TRANSACTION_DATE as transactionDate, TRANSACTION_TYPE as transactionType, " +
+            " ca2.title as accountTitle , vt.alias as voucherType, v2.VOUCHER_NO as voucherNo, amount FROM TRANSACTIONS t " +
+            "JOIN CHART_ACCOUNTS ca2 ON ca2.id = t.CHART_ACCOUNT_ID " +
+            "JOIN VOUCHERS v2 ON v2.id = t.VOUCHER_ID " +
+            "JOIN VOUCHER_TYPES vt ON vt.id = v2.VOUCHER_TYPE_ID " +
+            "WHERE t.VOUCHER_ID  IN ( " +
+            "SELECT v.id FROM TRANSACTIONS t  " +
+            "JOIN CHART_ACCOUNTS ca ON ca.ID = t.CHART_ACCOUNT_ID " +
+            "JOIN VOUCHERS v ON v.id = t.VOUCHER_ID " +
+            "WHERE ca.CODE = :code ) AND ca2.CODE <> :code",nativeQuery = true)
+    List<LedgerStatement> getLedgerStatement(@Param("code") String code);
 
 }
