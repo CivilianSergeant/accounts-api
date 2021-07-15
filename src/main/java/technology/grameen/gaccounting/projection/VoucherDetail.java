@@ -1,6 +1,8 @@
 package technology.grameen.gaccounting.projection;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import javax.persistence.Column;
+import javax.persistence.OrderBy;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -40,5 +42,7 @@ public interface VoucherDetail {
     String getRealm();
     @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDateTime getVoucherDate();
+
+
     Set<Transaction> getTransactions();
 }

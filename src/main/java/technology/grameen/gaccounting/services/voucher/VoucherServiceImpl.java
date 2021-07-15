@@ -1,5 +1,6 @@
 package technology.grameen.gaccounting.services.voucher;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -54,10 +55,11 @@ public class VoucherServiceImpl implements  VoucherService{
             voucherSaved.getTransactions().stream().map(t->{
                 t.setVoucher(voucherSaved);
                 t.setTransactionDate(voucherSaved.getVoucherDate());
+                transactionRepository.save(t);
                 return t;
             }).collect(Collectors.toSet());
 
-            transactionRepository.saveAll(voucherSaved.getTransactions());
+//            transactionRepository.saveAll(voucherSaved.getTransactions());
 
         }
         return voucherSaved;
@@ -71,5 +73,15 @@ public class VoucherServiceImpl implements  VoucherService{
     @Override
     public List<VoucherDetail> isVoucherNoUnique(String number) {
         return voucherRepository.findByVoucherNo(number);
+    }
+
+    @Override
+    public Boolean deleteVoucher(Long id) {
+        Optional<Voucher> voucherOptional = voucherRepository.findById(id);
+        if(voucherOptional.isPresent()){
+            voucherRepository.delete(voucherOptional.get());
+            return true;
+        }
+        return false;
     }
 }

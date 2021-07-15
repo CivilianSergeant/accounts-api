@@ -50,7 +50,8 @@ public class Voucher {
     @Column(nullable = false)
     private String realm;
 
-    @OneToMany(mappedBy = "voucher")
+    @OneToMany(mappedBy = "voucher",cascade = CascadeType.REMOVE)
+    @OrderBy("id ASC")
     private Set<Transaction> transactions;
 
     @OneToMany(mappedBy = "voucher")

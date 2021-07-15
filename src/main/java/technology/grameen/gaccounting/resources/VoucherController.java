@@ -114,6 +114,15 @@ public class VoucherController {
         ), HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<IResponse> removeVoucher(@PathVariable("id") Long id){
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                voucherService.deleteVoucher(id)
+        ), HttpStatus.OK);
+
+    }
+
 
 
 
