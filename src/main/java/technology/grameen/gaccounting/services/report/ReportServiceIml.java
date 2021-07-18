@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceIml implements ReportService {
@@ -235,7 +236,24 @@ public class ReportServiceIml implements ReportService {
     public Map<String,Object> getLedgerStatement(String code, LocalDateTime fromDate, LocalDateTime toDate) {
         Map<String,Object> map = new HashMap<>();
         map.put("ledger",caRepository.findLedgerByCode(code));
-        map.put("ledgerStatement",reportRepository.getLedgerStatement(code,fromDate,toDate));
+        List<ReportRepository.LedgerStatement> filteredledgerStatements = new ArrayList<>();
+        List<ReportRepository.LedgerStatement> ledgerStatements = reportRepository.getLedgerStatement(code,fromDate,toDate);
+        List<Long> ids = new ArrayList<>();
+        for(ReportRepository.LedgerStatement ls : ledgerStatements){
+            if(!ids.contains(ls.getTid())){
+                ids.add(ls.getTid());
+                filteredledgerStatements.add(ls);
+            }
+
+        }
+        filteredledgerStatements.stream().sorted((ReportRepository.LedgerStatement o1, ReportRepository.LedgerStatement o2)-> {
+                if(o1.getTransactionDate().isAfter(o2.getTransactionDate())){
+                    return 1;
+                }
+                return -1;
+
+        });
+        map.put("ledgerStatement",filteredledgerStatements);
         return map;
     }
 }

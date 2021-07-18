@@ -95,6 +95,8 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
 
     interface LedgerStatement{
         Long getVid();
+        Long getTid();
+        Long getReverseTrId();
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDateTime getTransactionDate();
         String getTransactionType();
@@ -106,13 +108,13 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
         BigDecimal getReverseAmount();
         String getVoucherType();
     }
-    @Query(value = "SELECT v.id AS vid, t2.TRANSACTION_DATE AS transactionDate ,t2.TRANSACTION_TYPE AS transactionType,\n" +
+    @Query(value = "SELECT v.id AS vid, t2.id as tid, a.tid as reverseTrId, t2.TRANSACTION_DATE AS transactionDate ,t2.TRANSACTION_TYPE AS transactionType,\n" +
             "a.title AS reverseAccountTitle ,ca3.title AS accountTitle ,t2.AMOUNT AS ledgerAmount , a.transaction_type AS reverseTransactionType,\n" +
             "v.voucher_no as voucherNo, a.amount AS reverseAmount, a.alias as voucherType FROM TRANSACTIONS t2 \n" +
             "JOIN CHART_ACCOUNTS ca3 ON ca3.id = t2.CHART_ACCOUNT_ID \n" +
             "JOIN VOUCHERS v ON v.id = t2.VOUCHER_ID \n" +
             "JOIN (\n" +
-            "SELECT v2.id AS vid, TRANSACTION_DATE, TRANSACTION_TYPE, ca2.title, vt.alias, amount FROM TRANSACTIONS t \n" +
+            "SELECT v2.id AS vid, t.id as tid, TRANSACTION_DATE, TRANSACTION_TYPE, ca2.title, vt.alias, amount FROM TRANSACTIONS t \n" +
             "JOIN CHART_ACCOUNTS ca2 ON ca2.id = t.CHART_ACCOUNT_ID\n" +
             "JOIN VOUCHERS v2 ON v2.id = t.VOUCHER_ID \n" +
             "JOIN VOUCHER_TYPES vt ON vt.id = v2.VOUCHER_TYPE_ID \n" +
@@ -121,10 +123,10 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
             "JOIN CHART_ACCOUNTS ca ON ca.ID = t.CHART_ACCOUNT_ID \n" +
             "JOIN VOUCHERS v ON v.id = t.VOUCHER_ID \n" +
             "WHERE ca.CODE = :code AND t.TRANSACTION_DATE BETWEEN :fromDate AND :toDate ) AND ca2.CODE <> :code\n" +
-            "\t\tAND t.TRANSACTION_DATE BETWEEN :fromDate AND :toDate\n" +
+            "\t\tAND t.TRANSACTION_DATE BETWEEN :fromDate AND :toDate ORDER BY t.amount DESC \n" +
             ") a ON a.vid = t2.VOUCHER_ID \n" +
             "WHERE ca3.CODE = :code AND a.transaction_Type != t2.TRANSACTION_TYPE AND (v.VOUCHER_DATE BETWEEN :fromDate AND :toDate)\n" +
-            "AND (t2.TRANSACTION_DATE BETWEEN :fromDate AND :toDate) ORDER BY t2.transaction_date asc",nativeQuery = true)
+            "AND (t2.TRANSACTION_DATE BETWEEN :fromDate AND :toDate)",nativeQuery = true)
     List<LedgerStatement> getLedgerStatement(@Param("code") String code, @Param("fromDate") LocalDateTime fromDate,
                                              @Param("toDate") LocalDateTime toDate);
 
