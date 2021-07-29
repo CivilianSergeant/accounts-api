@@ -20,6 +20,7 @@ public interface VoucherService {
     Optional<VoucherDetail> getVoucherDetail(Long id);
 
     List<VoucherDetail> isVoucherNoUnique(String number);
+    List<VoucherDetail> isVoucherNoUnique(String number,Long voucherId);
 
     Boolean deleteVoucher(Long id);
 }

@@ -52,12 +52,12 @@ public class VoucherServiceImpl implements  VoucherService{
         Voucher voucherSaved = voucherRepository.save(voucher);
 
         if(voucherSaved != null && voucherSaved.getId() > 0){
-            voucherSaved.getTransactions().stream().map(t->{
+            voucher.getTransactions().forEach(t->{
                 t.setVoucher(voucherSaved);
                 t.setTransactionDate(voucherSaved.getVoucherDate());
                 transactionRepository.save(t);
-                return t;
-            }).collect(Collectors.toSet());
+
+            });
 
 //            transactionRepository.saveAll(voucherSaved.getTransactions());
 
@@ -73,6 +73,11 @@ public class VoucherServiceImpl implements  VoucherService{
     @Override
     public List<VoucherDetail> isVoucherNoUnique(String number) {
         return voucherRepository.findByVoucherNo(number);
+    }
+
+    @Override
+    public List<VoucherDetail> isVoucherNoUnique(String number, Long voucherId) {
+        return voucherRepository.findByVoucherNoIsNotSameVid(number,voucherId);
     }
 
     @Override

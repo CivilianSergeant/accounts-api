@@ -25,4 +25,8 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
 
     @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.voucherType vt WHERE v.voucherNo =:voucherNo")
     List<VoucherDetail> findByVoucherNo(@Param("voucherNo") String number);
+
+    @Query(value = "SELECT v FROM Voucher v JOIN FETCH v.voucherType vt WHERE v.voucherNo =:voucherNo" +
+            " AND v.id <> :vid")
+    List<VoucherDetail> findByVoucherNoIsNotSameVid(@Param("voucherNo") String number, @Param("vid") Long vid);
 }

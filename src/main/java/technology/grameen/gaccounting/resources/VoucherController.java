@@ -76,6 +76,7 @@ public class VoucherController {
 
 
             Voucher voucher1 = voucherService.addVoucher(voucher);
+        voucher1.getVoucherType().setVouchers(null);
             voucher1.getTransactions().stream().map(t->{
                 t.setVoucher(null);
                 return t;
@@ -107,6 +108,17 @@ public class VoucherController {
     @GetMapping("/by-number/{number}")
     public ResponseEntity<IResponse> isVoucherNoAvailable(@PathVariable("number") String number){
         List<VoucherDetail> voucherExist = voucherService.isVoucherNoUnique(number);
+
+        return new ResponseEntity<>(new EntityResponse<>(
+                HttpStatus.OK.value(),
+                voucherExist.size()
+        ), HttpStatus.OK);
+    }
+
+    @GetMapping("/by-number/{number}/{voucherId}")
+    public ResponseEntity<IResponse> isVoucherNoAvailable(@PathVariable("number") String number,
+                                                          @PathVariable("voucherId") Long voucherId){
+        List<VoucherDetail> voucherExist = voucherService.isVoucherNoUnique(number,voucherId);
 
         return new ResponseEntity<>(new EntityResponse<>(
                 HttpStatus.OK.value(),
