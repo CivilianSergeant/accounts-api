@@ -1,6 +1,5 @@
 package technology.grameen.gaccounting.services.voucher;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import technology.grameen.gaccounting.projection.VoucherList;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class VoucherServiceImpl implements  VoucherService{
