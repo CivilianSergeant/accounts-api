@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import technology.grameen.gaccounting.accounting.entity.Voucher;
+import technology.grameen.gaccounting.projection.LedgerTransaction;
 import technology.grameen.gaccounting.projection.ReportData;
 
 import java.math.BigDecimal;
@@ -130,4 +131,22 @@ public interface ReportRepository extends JpaRepository<Voucher, Long> {
     List<LedgerStatement> getLedgerStatement(@Param("code") String code, @Param("fromDate") LocalDateTime fromDate,
                                              @Param("toDate") LocalDateTime toDate);
 
+
+
+    @Query(value = "SELECT v2.id AS vid, t.id as tid,ct.ALIAS chartType, TRANSACTION_DATE transactionDate, " +
+            "TRANSACTION_TYPE transactionType, ca2.title, vt.alias, amount\n" +
+            "FROM TRANSACTIONS t \n" +
+            "            JOIN CHART_ACCOUNTS ca2 ON ca2.id = t.CHART_ACCOUNT_ID\n" +
+            "            JOIN CA_TYPES ct ON ct.ID  = ca2.CHART_ACCOUNT_TYPE_ID\n" +
+            "            JOIN VOUCHERS v2 ON v2.id = t.VOUCHER_ID \n" +
+            "            JOIN VOUCHER_TYPES vt ON vt.id = v2.VOUCHER_TYPE_ID \n" +
+            "            WHERE t.VOUCHER_ID  IN ( SELECT v.id FROM TRANSACTIONS t \n" +
+            "            JOIN CHART_ACCOUNTS ca ON ca.ID = t.CHART_ACCOUNT_ID\n" +
+            "            JOIN VOUCHERS v ON v.id = t.VOUCHER_ID \n" +
+            "            WHERE ca.CODE = :code AND t.TRANSACTION_DATE \n" +
+            "            < :fromDate) \n" +
+            "            AND ca2.CODE = :code\n" +
+            "            AND t.TRANSACTION_DATE \n" +
+            "            < :fromDate ORDER BY t.amount DESC",nativeQuery = true)
+    List<LedgerTransaction> getLedgerTransactions(@Param("code") String code, @Param("fromDate") LocalDateTime fromDate);
 }

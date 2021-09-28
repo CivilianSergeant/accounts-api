@@ -126,6 +126,7 @@ public interface CaRepository extends JpaRepository<ChartAccount,Long> {
     interface LedgerInfo{
         Long getId();
         String getTitle();
+        String getCode();
         Boolean getLedger();
         ChartAccountType getChartAccountType();
         ChartAccountLedger getChartAccountLedger();

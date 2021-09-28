@@ -5,8 +5,11 @@ import technology.grameen.gaccounting.accounting.entity.GeneralSetting;
 import technology.grameen.gaccounting.accounting.repositories.CaRepository;
 import technology.grameen.gaccounting.accounting.repositories.GeneralSettingRepository;
 import technology.grameen.gaccounting.accounting.repositories.ReportRepository;
+import technology.grameen.gaccounting.projection.LedgerTransaction;
 import technology.grameen.gaccounting.projection.ReportData;
 import technology.grameen.gaccounting.services.UtilService;
+import technology.grameen.gaccounting.services.chartaccount.CaLedgerService;
+import technology.grameen.gaccounting.services.chartaccount.CaService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -235,25 +238,50 @@ public class ReportServiceIml implements ReportService {
     @Override
     public Map<String,Object> getLedgerStatement(String code, LocalDateTime fromDate, LocalDateTime toDate) {
         Map<String,Object> map = new HashMap<>();
-        map.put("ledger",caRepository.findLedgerByCode(code));
-        List<ReportRepository.LedgerStatement> filteredledgerStatements = new ArrayList<>();
-        List<ReportRepository.LedgerStatement> ledgerStatements = reportRepository.getLedgerStatement(code,fromDate,toDate);
-        List<Long> ids = new ArrayList<>();
-        for(ReportRepository.LedgerStatement ls : ledgerStatements){
-            if(!ids.contains(ls.getTid())){
-                ids.add(ls.getTid());
-                filteredledgerStatements.add(ls);
-            }
 
-        }
-        filteredledgerStatements.stream().sorted((ReportRepository.LedgerStatement o1, ReportRepository.LedgerStatement o2)-> {
-                if(o1.getTransactionDate().isAfter(o2.getTransactionDate())){
+        Optional<CaRepository.LedgerInfo> ledgerByCode = caRepository.findLedgerByCode(code);
+        if(ledgerByCode.isPresent()) {
+
+            CaRepository.LedgerInfo ledgerInfo = ledgerByCode.get();
+
+            map.put("ledger", ledgerInfo);
+            map.put("openingBalance",this.getLedgerOpeningBalance(ledgerInfo,fromDate));
+            List<ReportRepository.LedgerStatement> filteredledgerStatements = new ArrayList<>();
+            List<ReportRepository.LedgerStatement> ledgerStatements = reportRepository.getLedgerStatement(code, fromDate, toDate);
+            List<Long> ids = new ArrayList<>();
+            for (ReportRepository.LedgerStatement ls : ledgerStatements) {
+                if (!ids.contains(ls.getTid())) {
+                    ids.add(ls.getTid());
+                    filteredledgerStatements.add(ls);
+                }
+
+            }
+            filteredledgerStatements.stream().sorted((ReportRepository.LedgerStatement o1, ReportRepository.LedgerStatement o2) -> {
+                if (o1.getTransactionDate().isAfter(o2.getTransactionDate())) {
                     return 1;
                 }
                 return -1;
 
-        });
-        map.put("ledgerStatement",filteredledgerStatements);
+            });
+            map.put("ledgerStatement", filteredledgerStatements);
+        }
         return map;
+    }
+
+    @Override
+    public Double getLedgerOpeningBalance(CaRepository.LedgerInfo ledgerInfo, LocalDateTime fromDate) {
+        List<LedgerTransaction> ledgerTransactions = reportRepository.getLedgerTransactions(ledgerInfo.getCode(), fromDate);
+        Double balance = Double.valueOf(0);
+        for(LedgerTransaction l : ledgerTransactions){
+            if(ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("asset")){
+                if(l.getTransactionType().equalsIgnoreCase("dr")) {
+                    balance  += l.getAmount();
+                }
+                if(l.getTransactionType().equalsIgnoreCase("cr")){
+                    balance  -= l.getAmount();
+                }
+            }
+        };
+        return balance;
     }
 }
