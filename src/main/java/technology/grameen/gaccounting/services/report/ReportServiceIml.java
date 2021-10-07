@@ -273,12 +273,22 @@ public class ReportServiceIml implements ReportService {
         List<LedgerTransaction> ledgerTransactions = reportRepository.getLedgerTransactions(ledgerInfo.getCode(), fromDate);
         Double balance = Double.valueOf(0);
         for(LedgerTransaction l : ledgerTransactions){
-            if(ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("asset")){
+            if(ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("asset")
+            || ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("drawings")){
                 if(l.getTransactionType().equalsIgnoreCase("dr")) {
                     balance  += l.getAmount();
                 }
                 if(l.getTransactionType().equalsIgnoreCase("cr")){
                     balance  -= l.getAmount();
+                }
+            }
+            if(ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("liabilities")
+            || ledgerInfo.getChartAccountType().getAlias().equalsIgnoreCase("capital")){
+                if(l.getTransactionType().equalsIgnoreCase("dr")) {
+                    balance  -= l.getAmount();
+                }
+                if(l.getTransactionType().equalsIgnoreCase("cr")){
+                    balance  += l.getAmount();
                 }
             }
         };
